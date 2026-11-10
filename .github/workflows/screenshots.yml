@@ -1,0 +1,35 @@
+name: Demo screenshots
+on:
+  pull_request:
+    paths:
+      - 'tools/build_screenshot_demo.py'
+      - 'tools/capture_screenshots.cjs'
+      - '.github/workflows/screenshots.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false playwright
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python tools/build_screenshot_demo.py /tmp/radar-screenshot-demo
+          python -m http.server 5173 --bind 127.0.0.1 --directory /tmp/radar-screenshot-demo &
+          node tools/capture_screenshots.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: radar-demo-screenshots
+          path: docs/screenshots/*.png
+          retention-days: 7
