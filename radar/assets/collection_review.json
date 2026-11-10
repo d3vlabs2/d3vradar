@@ -1,0 +1,234 @@
+[
+  {
+    "id": "remotive",
+    "mode": "api",
+    "count": 12,
+    "sampleUrl": "https://remotive.com/remote-jobs/information-technology/tier-iii-service-desk-engineer-2091045",
+    "applicationMode": "external",
+    "applicationReason": "Use the original Remotive listing and its application route."
+  },
+  {
+    "id": "himalayas",
+    "mode": "api",
+    "count": 20,
+    "sampleUrl": "https://himalayas.app/companies/rackner/jobs/field-systems-engineer-military-health-it-ddil?utm_source=api",
+    "applicationMode": "external",
+    "applicationReason": "Preserves the original Himalayas applicationLink; no ATS shortcut."
+  },
+  {
+    "id": "cloudflare",
+    "mode": "greenhouse",
+    "count": 464,
+    "sampleUrl": "https://boards.greenhouse.io/cloudflare/jobs/7695702?gh_jid=7695702",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "canonical",
+    "mode": "greenhouse",
+    "count": 316,
+    "sampleUrl": "https://job-boards.greenhouse.io/canonical/jobs/5569916",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "ashby",
+    "mode": "ashby",
+    "count": 76,
+    "sampleUrl": "https://jobs.ashbyhq.com/Ashby/7458d4e9-da2e-47bd-98cb-adfda43d42b2",
+    "applicationMode": "external",
+    "applicationReason": "Provider sends an embedding restriction (DENY). Use the external application."
+  },
+  {
+    "id": "remoteok",
+    "mode": "remoteok",
+    "count": 99,
+    "sampleUrl": "https://remoteOK.com/remote-jobs/remote-revenue-cycle-manager-adaptive-innovations-1137706",
+    "applicationMode": "external",
+    "applicationReason": "Preserves Remote OK listing links and attribution required by its API."
+  },
+  {
+    "id": "weworkremotely",
+    "mode": "wwr",
+    "count": 100,
+    "sampleUrl": "https://weworkremotely.com/remote-jobs/anchour-marketing-designer",
+    "applicationMode": "external",
+    "applicationReason": "Preserves the original We Work Remotely listing and source attribution."
+  },
+  {
+    "id": "gitlab",
+    "mode": "greenhouse",
+    "count": 252,
+    "sampleUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8638232002",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "lemon",
+    "mode": "ashby",
+    "count": 3,
+    "sampleUrl": "https://jobs.ashbyhq.com/lemon-io/4dc7dd66-686c-4a07-82cc-a1a8448d34c6",
+    "applicationMode": "external",
+    "applicationReason": "Provider sends an embedding restriction (DENY). Use the external application."
+  },
+  {
+    "id": "oyster",
+    "mode": "ashby",
+    "count": 18,
+    "sampleUrl": "https://jobs.ashbyhq.com/oyster/83b10c34-8c44-4c58-89d4-5e99be716c76",
+    "applicationMode": "external",
+    "applicationReason": "Provider sends an embedding restriction (DENY). Use the external application."
+  },
+  {
+    "id": "andela",
+    "mode": "ashby",
+    "count": 8,
+    "sampleUrl": "https://jobs.ashbyhq.com/andela/9829c4f1-548f-4ef9-b4a2-c0ba2e11b90c",
+    "applicationMode": "external",
+    "applicationReason": "Provider sends an embedding restriction (DENY). Use the external application."
+  },
+  {
+    "id": "zapier",
+    "mode": "ashby",
+    "count": 10,
+    "sampleUrl": "https://jobs.ashbyhq.com/zapier/cb1aec2c-05cd-4598-8117-bd1f7ed9a49f",
+    "applicationMode": "external",
+    "applicationReason": "Provider sends an embedding restriction (DENY). Use the external application."
+  },
+  {
+    "id": "wikimedia",
+    "mode": "greenhouse",
+    "count": 16,
+    "sampleUrl": "https://job-boards.greenhouse.io/wikimedia/jobs/8248898",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "elastic",
+    "mode": "greenhouse",
+    "count": 423,
+    "sampleUrl": "https://jobs.elastic.co/jobs?gh_jid=8148720&gh_jid=8148720",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "mozilla",
+    "mode": "greenhouse",
+    "count": 110,
+    "sampleUrl": "https://job-boards.greenhouse.io/mozilla/jobs/8359281",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "digitalocean",
+    "mode": "greenhouse",
+    "count": 152,
+    "sampleUrl": "https://www.digitalocean.com/careers/position/apply/?gh_jid=8249366",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "netlify",
+    "mode": "greenhouse",
+    "count": 5,
+    "sampleUrl": "https://job-boards.greenhouse.io/netlify/jobs/8861222002",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "stripe",
+    "mode": "greenhouse",
+    "count": 772,
+    "sampleUrl": "https://stripe.com/jobs/search?gh_jid=8172508",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "airbnb",
+    "mode": "greenhouse",
+    "count": 205,
+    "sampleUrl": "https://careers.airbnb.com/positions/8306554?gh_jid=8306554",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "vercel",
+    "mode": "greenhouse",
+    "count": 87,
+    "sampleUrl": "https://job-boards.greenhouse.io/vercel/jobs/6231864004",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "coinbase",
+    "mode": "greenhouse",
+    "count": 285,
+    "sampleUrl": "https://www.coinbase.com/careers/positions/8175363?gh_jid=8175363",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "asana",
+    "mode": "greenhouse",
+    "count": 112,
+    "sampleUrl": "https://www.asana.com/jobs/apply/8305286?gh_jid=8305286",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "dropbox",
+    "mode": "greenhouse",
+    "count": 33,
+    "sampleUrl": "https://jobs.dropbox.com/listing/8159652?gh_jid=8159652",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "figma",
+    "mode": "greenhouse",
+    "count": 144,
+    "sampleUrl": "https://boards.greenhouse.io/figma/jobs/5426468004?gh_jid=5426468004",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "hubspot",
+    "mode": "greenhouse",
+    "count": 126,
+    "sampleUrl": "https://www.hubspot.com/careers/jobs/5990250?gh_jid=5990250",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "quora",
+    "mode": "ashby",
+    "count": 8,
+    "sampleUrl": "https://jobs.ashbyhq.com/quora/b2462dc7-08d7-4060-8ceb-9a1fa16615fb",
+    "applicationMode": "external",
+    "applicationReason": "Provider sends an embedding restriction (DENY). Use the external application."
+  },
+  {
+    "id": "notion",
+    "mode": "ashby",
+    "count": 153,
+    "sampleUrl": "https://jobs.ashbyhq.com/notion/1fc309c8-da20-4ff2-84c7-8b863ece2b0a",
+    "applicationMode": "external",
+    "applicationReason": "Provider sends an embedding restriction (DENY). Use the external application."
+  },
+  {
+    "id": "twilio",
+    "mode": "greenhouse",
+    "count": 129,
+    "sampleUrl": "https://job-boards.greenhouse.io/twilio/jobs/8249615",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  },
+  {
+    "id": "reddit",
+    "mode": "greenhouse",
+    "count": 157,
+    "sampleUrl": "https://job-boards.greenhouse.io/reddit/jobs/8153017",
+    "applicationMode": "embed",
+    "applicationReason": "Provider supports this embed route. Complete and submit the employer form below. Login, cookies, or employer settings may still require opening it externally."
+  }
+]

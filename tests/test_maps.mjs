@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {destinations,mapsUrl,embedUrl} from '../radar/static/maps.mjs';
+assert.deepEqual(destinations({workplace:'remote',location:'United States'}),[]);
+assert.deepEqual(destinations({workplace:'remote',location:'Albany, NY'}),[]);
+assert.deepEqual(destinations({workplace:'unknown',location:'Remote, United States'}),[]);
+assert.equal(destinations({workplace:'hybrid',location:'Albany, NY'})[0].approximate,true);
+assert.equal(destinations({workplace:'remote',officeAddress:'123 Example St, Albany, NY'})[0].approximate,false);
+assert.equal(destinations({location:'Albany, NY; Rochester, NY'}).length,2);
+const route=new URL(mapsUrl('A & B #2, Buffalo, NY','12207','driving'));
+assert.equal(route.origin,'https://www.google.com');assert.equal(route.searchParams.get('destination'),'A & B #2, Buffalo, NY');
+assert.equal(route.searchParams.get('origin'),'12207');assert.equal(route.searchParams.get('api'),'1');assert.equal(route.searchParams.get('travelmode'),'driving');
+assert.equal(new URL(mapsUrl('Albany, NY')).searchParams.get('origin'),null);
+assert.throws(()=>mapsUrl(' '));assert.equal(embedUrl('', 'Albany, NY'),'');
+const embed=new URL(embedUrl('browser-key','Buffalo, NY','12207','transit'));
+assert.equal(embed.pathname,'/maps/embed/v1/directions');assert.equal(embed.searchParams.get('units'),'imperial');assert.equal(embed.searchParams.get('mode'),'transit');
+assert.equal(new URL(embedUrl('browser-key','Albany, NY')).pathname,'/maps/embed/v1/place');
+console.log('18 Maps checks passed.');

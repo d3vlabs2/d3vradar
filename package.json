@@ -1,0 +1,10 @@
+{
+  "name": "d3v-jobradar-homelab",
+  "version": "2.6.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node tests/test_matcher.cjs && node tests/test_stats.mjs && node tests/test_maps.mjs",
+    "dev": "bash deploy/dev-preview.sh"
+  }
+}

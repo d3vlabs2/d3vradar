@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+.git
+__pycache__
+*.pyc
+.pytest_cache
+data
+backup*
+tests
+extension
+deploy
+migration.json
+.radar-backups

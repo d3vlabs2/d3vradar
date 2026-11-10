@@ -1,0 +1,2 @@
+# Runtime dependencies locked from the verified Python 3.12 environment.
+-r requirements.lock

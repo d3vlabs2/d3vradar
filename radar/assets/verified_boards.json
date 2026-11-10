@@ -1,0 +1,107 @@
+{
+  "vercel": {
+    "mode": "greenhouse",
+    "board": "vercel",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "digitalocean": {
+    "mode": "greenhouse",
+    "board": "digitalocean98",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "airbnb": {
+    "mode": "greenhouse",
+    "board": "airbnb",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "coinbase": {
+    "mode": "greenhouse",
+    "board": "coinbase",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "stripe": {
+    "mode": "greenhouse",
+    "board": "stripe",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "asana": {
+    "mode": "greenhouse",
+    "board": "asana",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "dropbox": {
+    "mode": "greenhouse",
+    "board": "dropbox",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "twilio": {
+    "mode": "greenhouse",
+    "board": "twilio",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "hubspot": {
+    "mode": "greenhouse",
+    "board": "hubspotjobs",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "reddit": {
+    "mode": "greenhouse",
+    "board": "reddit",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "wikimedia": {
+    "mode": "greenhouse",
+    "board": "wikimedia",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "figma": {
+    "mode": "greenhouse",
+    "board": "figma",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "mozilla": {
+    "mode": "greenhouse",
+    "board": "mozilla",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "elastic": {
+    "mode": "greenhouse",
+    "board": "elastic",
+    "about": "Verified public Greenhouse employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "zapier": {
+    "mode": "ashby",
+    "board": "zapier",
+    "about": "Verified public Ashby employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "lemon": {
+    "mode": "ashby",
+    "board": "lemon-io",
+    "about": "Verified public Ashby employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "andela": {
+    "mode": "ashby",
+    "board": "andela",
+    "about": "Verified public Ashby employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "oyster": {
+    "mode": "ashby",
+    "board": "oyster",
+    "about": "Verified public Ashby employer posting feed. Applications are checked per job; employer embedding restrictions apply."
+  },
+  "netlify": {
+    "mode": "greenhouse",
+    "board": "netlify",
+    "about": "Verified public Greenhouse employer posting feed; application embedding is checked per job."
+  },
+  "notion": {
+    "mode": "ashby",
+    "board": "notion",
+    "about": "Verified public Ashby employer posting feed; application embedding is checked per job."
+  },
+  "quora": {
+    "mode": "ashby",
+    "board": "quora",
+    "about": "Verified public Ashby employer posting feed; application embedding is checked per job."
+  }
+}

@@ -1,0 +1,1089 @@
+[
+  {
+    "id": "remotive",
+    "name": "Remotive",
+    "url": "https://remotive.com",
+    "checked": "2026-11-10T03:16:23.556032+00:00",
+    "status": 200,
+    "finalUrl": "https://remotive.com",
+    "ats": [
+      {
+        "provider": "greenhouse",
+        "board": "gomotive"
+      },
+      {
+        "provider": "greenhouse",
+        "board": "rackner"
+      },
+      {
+        "provider": "greenhouse",
+        "board": "pingidentity"
+      },
+      {
+        "provider": "greenhouse",
+        "board": "umaeducationinc"
+      },
+      {
+        "provider": "greenhouse",
+        "board": "machinifyinc"
+      }
+    ],
+    "title": "Remote Jobs in Programming, Support, Design and more"
+  },
+  {
+    "id": "eztrackr",
+    "name": "Eztrackr",
+    "url": "https://eztrackr.app",
+    "checked": "2026-11-10T03:16:23.558737+00:00",
+    "status": 200,
+    "finalUrl": "https://eztrackr.app",
+    "ats": [],
+    "title": "Eztrackr - Organize your job hunt and say goodbye to spreadsheets"
+  },
+  {
+    "id": "remote-rocketship",
+    "name": "Remote Rocketship",
+    "url": "https://remoterocketship.com",
+    "checked": "2026-11-10T03:16:23.559067+00:00",
+    "status": 200,
+    "finalUrl": "https://www.remoterocketship.com/",
+    "ats": [],
+    "title": "Remote Rocketship | Remote Jobs You Won't Find on LinkedIn"
+  },
+  {
+    "id": "weworkremotely",
+    "name": "We Work Remotely",
+    "url": "https://weworkremotely.com",
+    "checked": "2026-11-10T03:16:23.559273+00:00",
+    "status": 200,
+    "finalUrl": "https://weworkremotely.com",
+    "ats": [],
+    "title": "We Work Remotely: Advanced Remote Job Search"
+  },
+  {
+    "id": "flexjobs",
+    "name": "FlexJobs",
+    "url": "https://flexjobs.com",
+    "checked": "2026-11-10T03:16:23.559456+00:00",
+    "status": 200,
+    "finalUrl": "https://www.flexjobs.com/",
+    "ats": [],
+    "title": "FlexJobs: Best Work From Home Jobs, Online Jobs & More"
+  },
+  {
+    "id": "wellfound",
+    "name": "Wellfound",
+    "url": "https://wellfound.com",
+    "checked": "2026-11-10T03:16:23.559636+00:00",
+    "status": 200,
+    "finalUrl": "https://wellfound.com",
+    "ats": [],
+    "title": "Startup Jobs & AI Recruiting Platform | Wellfound"
+  },
+  {
+    "id": "toptal",
+    "name": "Toptal",
+    "url": "https://toptal.com",
+    "checked": "2026-11-10T03:16:30.512090+00:00",
+    "status": 200,
+    "finalUrl": "https://www.toptal.com/",
+    "ats": [],
+    "title": "Toptal - Hire Freelance Talent from the Top 3%"
+  },
+  {
+    "id": "hubstaff",
+    "name": "Hubstaff Talent",
+    "url": "https://talent.hubstaff.com",
+    "checked": "2026-11-10T03:16:30.797489+00:00",
+    "status": 200,
+    "finalUrl": "https://hubstafftalent.net/",
+    "ats": [],
+    "title": "Hire Freelancers & Remote Workers For Free"
+  },
+  {
+    "id": "justremote",
+    "name": "JustRemote",
+    "url": "https://justremote.co",
+    "checked": "2026-11-10T03:16:30.915342+00:00",
+    "status": 200,
+    "finalUrl": "https://justremote.co",
+    "ats": [],
+    "title": "Remote Jobs: Design, Marketing, Programming, Writing & More"
+  },
+  {
+    "id": "workingnomads",
+    "name": "Working Nomads",
+    "url": "https://workingnomads.com",
+    "checked": "2026-11-10T03:16:32.868481+00:00",
+    "status": 200,
+    "finalUrl": "https://www.workingnomads.com/jobs",
+    "ats": [],
+    "title": "Remote Jobs | Working Nomads"
+  },
+  {
+    "id": "remoteok",
+    "name": "Remote OK",
+    "url": "https://remoteok.com",
+    "checked": "2026-11-10T03:16:35.033673+00:00",
+    "status": 200,
+    "finalUrl": "https://remoteok.com",
+    "ats": [],
+    "title": "Remote Jobs in Programming, Design, Sales and more #OpenSalaries"
+  },
+  {
+    "id": "jsremotely",
+    "name": "JS Remotely",
+    "url": "https://jsremotely.com",
+    "checked": "2026-11-10T03:16:35.517609+00:00",
+    "status": 200,
+    "finalUrl": "https://javascript.jobs/remote",
+    "ats": [],
+    "title": "Remote Javascript Jobs"
+  },
+  {
+    "id": "jobspresso",
+    "name": "Jobspresso",
+    "url": "https://jobspresso.co",
+    "checked": "2026-11-10T03:16:36.268000+00:00",
+    "status": 200,
+    "finalUrl": "https://jobspresso.co",
+    "ats": [],
+    "title": "Remote Jobs: 1,000+ Job Openings for Remote Work | Jobspresso"
+  },
+  {
+    "id": "virtualvocations",
+    "name": "Virtual Vocations",
+    "url": "https://virtualvocations.com",
+    "checked": "2026-11-10T03:16:39.402265+00:00",
+    "status": 200,
+    "finalUrl": "https://www.virtualvocations.com/",
+    "ats": [],
+    "title": "Best Remote and Work from Home Jobs - Virtual Vocations"
+  },
+  {
+    "id": "remote-co",
+    "name": "Remote.co",
+    "url": "https://remote.co",
+    "checked": "2026-11-10T03:16:39.405195+00:00",
+    "status": 200,
+    "finalUrl": "https://remote.co",
+    "ats": [],
+    "title": "Remote Work: Jobs, Companies & Virtual Teams - Remote.co"
+  },
+  {
+    "id": "dailyremote",
+    "name": "DailyRemote",
+    "url": "https://dailyremote.com",
+    "checked": "2026-11-10T03:16:39.448581+00:00",
+    "status": 200,
+    "finalUrl": "https://dailyremote.com",
+    "ats": [],
+    "title": "DailyRemote: Remote Jobs & Work From Home Jobs | Online Jobs & Remote Work"
+  },
+  {
+    "id": "careervault",
+    "name": "Career Vault",
+    "url": "https://careervault.io",
+    "checked": "2026-11-10T03:16:39.727166+00:00",
+    "status": 200,
+    "finalUrl": "https://careervault.io",
+    "ats": [],
+    "title": "Career Vault - Remote jobs in Programming, Design, Marketing, and more. | Career Vault"
+  },
+  {
+    "id": "pangian",
+    "name": "Pangian",
+    "url": "https://pangian.com",
+    "checked": "2026-11-10T03:16:41.336190+00:00",
+    "status": 200,
+    "finalUrl": "https://pangian.com",
+    "ats": [],
+    "title": ""
+  },
+  {
+    "id": "remotewoman",
+    "name": "Remote Woman",
+    "url": "https://remotewoman.com",
+    "checked": "2026-11-10T03:16:42.809405+00:00",
+    "status": 200,
+    "finalUrl": "https://remotewoman.com",
+    "ats": [],
+    "title": "Home - RemoteWoman"
+  },
+  {
+    "id": "ai-jobs",
+    "name": "AI Jobs",
+    "url": "https://theaijobboard.com",
+    "checked": "2026-11-10T03:16:43.595702+00:00",
+    "status": null,
+    "finalUrl": "https://theaijobboard.com",
+    "ats": [],
+    "error": "TooManyRedirects"
+  },
+  {
+    "id": "arc",
+    "name": "Arc.dev",
+    "url": "https://arc.dev",
+    "checked": "2026-11-10T03:16:44.524023+00:00",
+    "status": 200,
+    "finalUrl": "https://arc.dev",
+    "ats": [],
+    "title": "Hire the Top 2% of Talent | Arc"
+  },
+  {
+    "id": "contra",
+    "name": "Contra",
+    "url": "https://contra.com",
+    "checked": "2026-11-10T03:16:45.436479+00:00",
+    "status": 200,
+    "finalUrl": "https://contra.com",
+    "ats": [],
+    "title": "Contra - A professional network for the jobs and skills of the future"
+  },
+  {
+    "id": "hired",
+    "name": "Hired",
+    "url": "https://hired.com",
+    "checked": "2026-11-10T03:16:46.617729+00:00",
+    "status": 200,
+    "finalUrl": "https://www.lhh.com/en-us/about-us/our-story",
+    "ats": [],
+    "title": "Our story | LHH"
+  },
+  {
+    "id": "dice",
+    "name": "Dice",
+    "url": "https://dice.com",
+    "checked": "2026-11-10T03:16:46.656096+00:00",
+    "status": 200,
+    "finalUrl": "https://www.dice.com/",
+    "ats": [],
+    "title": "Find Tech Jobs | Advance Your Tech Career | Job Search on Dice.com"
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn Jobs",
+    "url": "https://linkedin.com/jobs",
+    "checked": "2026-11-10T03:16:47.006541+00:00",
+    "status": 200,
+    "finalUrl": "https://linkedin.com/jobs",
+    "ats": [],
+    "title": "Checking your browser - reCAPTCHA"
+  },
+  {
+    "id": "indeed",
+    "name": "Indeed",
+    "url": "https://indeed.com",
+    "checked": "2026-11-10T03:16:49.989566+00:00",
+    "status": 200,
+    "finalUrl": "https://www.indeed.com/",
+    "ats": [],
+    "title": "Job Search | Indeed"
+  },
+  {
+    "id": "glassdoor",
+    "name": "Glassdoor",
+    "url": "https://glassdoor.com",
+    "checked": "2026-11-10T03:16:50.853007+00:00",
+    "status": 200,
+    "finalUrl": "https://www.glassdoor.com/index.htm",
+    "ats": [],
+    "title": "Glassdoor | Relevant Job Matches and Company Research"
+  },
+  {
+    "id": "jooble",
+    "name": "Jooble",
+    "url": "https://jooble.org",
+    "checked": "2026-11-10T03:16:50.987361+00:00",
+    "status": 200,
+    "finalUrl": "https://jooble.org",
+    "ats": [],
+    "title": "Jooble \u2014 3.239.000+ current vacancies \u2014 Jobs in USA"
+  },
+  {
+    "id": "talent",
+    "name": "Talent.com",
+    "url": "https://talent.com",
+    "checked": "2026-11-10T03:16:55.690476+00:00",
+    "status": 200,
+    "finalUrl": "https://fr.talent.com/",
+    "ats": [],
+    "title": "Talent.com : Acc\u00e9dez \u00e0 des milliers d'offres d'emploi pr\u00e8s de chez vous"
+  },
+  {
+    "id": "upwork",
+    "name": "Upwork",
+    "url": "https://upwork.com",
+    "checked": "2026-11-10T03:16:55.973909+00:00",
+    "status": 403,
+    "finalUrl": "https://upwork.com",
+    "ats": []
+  },
+  {
+    "id": "fiverr",
+    "name": "Fiverr",
+    "url": "https://fiverr.com",
+    "checked": "2026-11-10T03:16:56.517320+00:00",
+    "status": 200,
+    "finalUrl": "https://www.fiverr.com/",
+    "ats": [],
+    "title": "Fiverr | Freelance services marketplace | Find top global talent"
+  },
+  {
+    "id": "freelancer",
+    "name": "Freelancer",
+    "url": "https://freelancer.com",
+    "checked": "2026-11-10T03:16:59.950250+00:00",
+    "status": 200,
+    "finalUrl": "https://www.freelancer.com/",
+    "ats": [],
+    "title": "Hire Freelancers & Find Freelance Jobs Online | Freelancer"
+  },
+  {
+    "id": "guru",
+    "name": "Guru",
+    "url": "https://guru.com",
+    "checked": "2026-11-10T03:17:00.075255+00:00",
+    "status": 403,
+    "finalUrl": "https://www.guru.com/",
+    "ats": []
+  },
+  {
+    "id": "peopleperhour",
+    "name": "PeoplePerHour",
+    "url": "https://peopleperhour.com",
+    "checked": "2026-11-10T03:17:01.087620+00:00",
+    "status": 200,
+    "finalUrl": "https://www.peopleperhour.com/",
+    "ats": [],
+    "title": "PeoplePerHour.com - Hire Freelancers Online & Find Freelance Work"
+  },
+  {
+    "id": "outsourcely",
+    "name": "Outsourcely",
+    "url": "https://outsourcely.com",
+    "checked": "2026-11-10T03:17:03.502455+00:00",
+    "status": 503,
+    "finalUrl": "https://outsourcely.com",
+    "ats": []
+  },
+  {
+    "id": "crossover",
+    "name": "Crossover",
+    "url": "https://crossover.com",
+    "checked": "2026-11-10T03:17:06.687213+00:00",
+    "status": 200,
+    "finalUrl": "https://www.crossover.com/",
+    "ats": [],
+    "title": "Crossover"
+  },
+  {
+    "id": "himalayas",
+    "name": "Himalayas",
+    "url": "https://himalayas.app",
+    "checked": "2026-11-10T03:17:07.524324+00:00",
+    "status": 200,
+    "finalUrl": "https://himalayas.app",
+    "ats": [],
+    "title": "Remote Job Board and Free AI Job Search Tools | Himalayas"
+  },
+  {
+    "id": "otta",
+    "name": "Otta",
+    "url": "https://otta.com",
+    "checked": "2026-11-10T03:17:09.271153+00:00",
+    "status": 200,
+    "finalUrl": "https://uk.welcometothejungle.com/",
+    "ats": [],
+    "title": "Welcome To The Jungle UK (formerly Otta) - Find a job"
+  },
+  {
+    "id": "workable",
+    "name": "Workable",
+    "url": "https://workable.com",
+    "checked": "2026-11-10T03:17:09.846503+00:00",
+    "status": 200,
+    "finalUrl": "https://www.workable.com/",
+    "ats": [],
+    "title": "Workable | All-in-one HR software"
+  },
+  {
+    "id": "greenhouse",
+    "name": "Greenhouse",
+    "url": "https://greenhouse.io",
+    "checked": "2026-11-10T03:17:11.915619+00:00",
+    "status": 200,
+    "finalUrl": "https://www.greenhouse.com/",
+    "ats": [],
+    "title": "Greenhouse | Orchestrated Hiring System"
+  },
+  {
+    "id": "lever",
+    "name": "Lever",
+    "url": "https://lever.co",
+    "checked": "2026-11-10T03:17:12.257305+00:00",
+    "status": 200,
+    "finalUrl": "https://www.lever.co/",
+    "ats": [],
+    "title": "Lever | Modern Recruiting Software & ATS"
+  },
+  {
+    "id": "ashby",
+    "name": "Ashby",
+    "url": "https://ashbyhq.com",
+    "checked": "2026-11-10T03:17:12.428512+00:00",
+    "status": 200,
+    "finalUrl": "https://www.ashbyhq.com/",
+    "ats": [],
+    "title": "All-in-one Recruiting Software for Ambitious Teams | Ashby"
+  },
+  {
+    "id": "cord",
+    "name": "Cord",
+    "url": "https://cord.co",
+    "checked": "2026-11-10T03:17:14.507527+00:00",
+    "status": 200,
+    "finalUrl": "https://cord.com/",
+    "ats": [],
+    "title": "A more human job search - cord"
+  },
+  {
+    "id": "ycombinator",
+    "name": "Y Combinator Jobs",
+    "url": "https://www.ycombinator.com/jobs",
+    "checked": "2026-11-10T03:20:23.901739+00:00",
+    "status": 200,
+    "finalUrl": "https://www.ycombinator.com/jobs",
+    "ats": [],
+    "originalCheck": {
+      "url": "https://yc.com/jobs",
+      "finalUrl": "https://www.depot.com/Books-1000-0847837211-Yacht_Clubs_of_the_World.html",
+      "status": 404,
+      "error": null
+    }
+  },
+  {
+    "id": "braintrust",
+    "name": "Braintrust",
+    "url": "https://braintrust.com",
+    "checked": "2026-11-10T03:17:19.947323+00:00",
+    "status": 200,
+    "finalUrl": "https://www.usebraintrust.com/",
+    "ats": [],
+    "title": "Braintrust \u2014 AI-Powered Talent Network for Enterprise"
+  },
+  {
+    "id": "gun",
+    "name": "Gun.io",
+    "url": "https://gun.io",
+    "checked": "2026-11-10T03:17:21.659668+00:00",
+    "status": 200,
+    "finalUrl": "https://gun.io",
+    "ats": [],
+    "title": "The Technical Standard for High Stakes Engineering | Gun.io"
+  },
+  {
+    "id": "lemon",
+    "name": "Lemon.io",
+    "url": "https://lemon.io",
+    "checked": "2026-11-10T03:17:21.901862+00:00",
+    "status": 200,
+    "finalUrl": "https://lemon.io",
+    "ats": [
+      {
+        "provider": "ashby",
+        "board": "lemon-io"
+      }
+    ],
+    "title": "Hire TOP Software Developers for Startups \u2014 Lemon.io"
+  },
+  {
+    "id": "turing",
+    "name": "Turing",
+    "url": "https://turing.com",
+    "checked": "2026-11-10T03:17:21.916670+00:00",
+    "status": 200,
+    "finalUrl": "https://www.turing.com/",
+    "ats": [],
+    "title": "Turing | Accelerate Superintelligence"
+  },
+  {
+    "id": "revelo",
+    "name": "Revelo",
+    "url": "https://revelo.com",
+    "checked": "2026-11-10T03:17:23.443396+00:00",
+    "status": 200,
+    "finalUrl": "https://www.revelo.com/",
+    "ats": [],
+    "title": "Revelo | Engineering Expertise for the AI Economy"
+  },
+  {
+    "id": "andela",
+    "name": "Andela",
+    "url": "https://andela.com",
+    "checked": "2026-11-10T03:17:26.587305+00:00",
+    "status": 200,
+    "finalUrl": "https://www.andela.com/",
+    "ats": [
+      {
+        "provider": "ashby",
+        "board": "andela"
+      }
+    ],
+    "title": "The Human Layer Powering Production AI"
+  },
+  {
+    "id": "deel",
+    "name": "Deel Careers",
+    "url": "https://deel.com/careers",
+    "checked": "2026-11-10T03:17:26.670986+00:00",
+    "status": 200,
+    "finalUrl": "https://www.deel.com/careers/",
+    "ats": [],
+    "title": "Join Deel's Global Team | Remote Jobs in 80+ Countries | Deel"
+  },
+  {
+    "id": "oyster",
+    "name": "Oyster Careers",
+    "url": "https://oysterhr.com/careers",
+    "checked": "2026-11-10T03:17:34.727152+00:00",
+    "status": 200,
+    "finalUrl": "https://www.oysterhr.com/careers",
+    "ats": [
+      {
+        "provider": "ashby",
+        "board": "oyster"
+      }
+    ],
+    "title": "Careers at Oyster\u00ae | Mission-driven, Work From Anywhere Jobs"
+  },
+  {
+    "id": "canonical",
+    "name": "Canonical Jobs",
+    "url": "https://canonical.com/careers",
+    "checked": "2026-11-10T03:17:34.778789+00:00",
+    "status": 200,
+    "finalUrl": "https://canonical.com/careers",
+    "ats": [
+      {
+        "provider": "greenhouse",
+        "board": "canonical"
+      }
+    ],
+    "title": "Careers | Canonical"
+  },
+  {
+    "id": "gitlab",
+    "name": "GitLab Jobs",
+    "url": "https://about.gitlab.com/jobs",
+    "checked": "2026-11-10T03:17:34.920561+00:00",
+    "status": 200,
+    "finalUrl": "https://about.gitlab.com/jobs/",
+    "ats": [],
+    "title": "Join GitLab"
+  },
+  {
+    "id": "automattic",
+    "name": "Automattic Jobs",
+    "url": "https://automattic.com/work-with-us",
+    "checked": "2026-11-10T03:17:38.173300+00:00",
+    "status": 200,
+    "finalUrl": "https://automattic.com/work-with-us/",
+    "ats": [],
+    "title": "Work With Us \u2013 Automattic"
+  },
+  {
+    "id": "zapier",
+    "name": "Zapier Jobs",
+    "url": "https://zapier.com/jobs",
+    "checked": "2026-11-10T03:17:38.281105+00:00",
+    "status": 200,
+    "finalUrl": "https://zapier.com/jobs",
+    "ats": [
+      {
+        "provider": "ashby",
+        "board": "zapier"
+      }
+    ],
+    "title": "Jobs at Zapier: Join us from anywhere"
+  },
+  {
+    "id": "shopify",
+    "name": "Shopify Careers",
+    "url": "https://shopify.com/careers",
+    "checked": "2026-11-10T03:17:38.333583+00:00",
+    "status": 200,
+    "finalUrl": "https://www.shopify.com/careers",
+    "ats": [],
+    "title": "Careers, Internships, and Jobs at Shopify | Shopify Careers - Shopify"
+  },
+  {
+    "id": "buffer",
+    "name": "Buffer Jobs",
+    "url": "https://buffer.com/journey",
+    "checked": "2026-11-10T03:17:38.539719+00:00",
+    "status": 200,
+    "finalUrl": "https://buffer.com/journey",
+    "ats": [],
+    "title": "Join the Buffer journey - Jobs at Buffer"
+  },
+  {
+    "id": "doist",
+    "name": "Doist",
+    "url": "https://doist.com/careers",
+    "checked": "2026-11-10T03:17:39.855443+00:00",
+    "status": null,
+    "finalUrl": "https://doist.com/careers",
+    "ats": [],
+    "error": "ReadTimeout"
+  },
+  {
+    "id": "invision",
+    "name": "InVision",
+    "url": "https://invisionapp.com/careers",
+    "checked": "2026-11-10T03:17:41.768279+00:00",
+    "status": 200,
+    "finalUrl": "https://miro.com/",
+    "ats": [],
+    "title": "AI Innovation Workspace | Miro"
+  },
+  {
+    "id": "basecamp",
+    "name": "Basecamp",
+    "url": "https://basecamp.com/about/jobs",
+    "checked": "2026-11-10T03:17:42.301819+00:00",
+    "status": 200,
+    "finalUrl": "https://37signals.com/jobs",
+    "ats": [],
+    "title": "37signals \u2014 Working at 37signals"
+  },
+  {
+    "id": "mozilla",
+    "name": "Mozilla Careers",
+    "url": "https://careers.mozilla.org",
+    "checked": "2026-11-10T03:17:42.688008+00:00",
+    "status": 200,
+    "finalUrl": "https://www.mozilla.org/en-US/careers/",
+    "ats": [],
+    "title": "Mozilla Careers \u2014 Feel good about your work again."
+  },
+  {
+    "id": "duckduckgo",
+    "name": "DuckDuckGo Careers",
+    "url": "https://duckduckgo.com/hiring",
+    "checked": "2026-11-10T03:17:42.983973+00:00",
+    "status": 200,
+    "finalUrl": "https://duckduckgo.com/hiring",
+    "ats": [],
+    "title": "DuckDuckGo is Hiring!"
+  },
+  {
+    "id": "wikimedia",
+    "name": "Wikimedia Foundation Jobs",
+    "url": "https://wikimediafoundation.org/about/jobs",
+    "checked": "2026-11-10T03:17:46.594612+00:00",
+    "status": 200,
+    "finalUrl": "https://wikimediafoundation.org/jobs/",
+    "ats": [],
+    "title": "Work with us \u2013 Wikimedia Foundation"
+  },
+  {
+    "id": "elastic",
+    "name": "Elastic Careers",
+    "url": "https://elastic.co/careers",
+    "checked": "2026-11-10T03:17:47.163688+00:00",
+    "status": 200,
+    "finalUrl": "https://www.elastic.co/careers",
+    "ats": [],
+    "title": "Careers | Elastic"
+  },
+  {
+    "id": "redhat",
+    "name": "Red Hat Careers",
+    "url": "https://redhat.com/en/jobs",
+    "checked": "2026-11-10T03:17:49.558940+00:00",
+    "status": 200,
+    "finalUrl": "https://redhat.com/en/jobs",
+    "ats": [],
+    "title": "Site Unavailable"
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare Careers",
+    "url": "https://cloudflare.com/careers",
+    "checked": "2026-11-10T03:17:50.155692+00:00",
+    "status": 200,
+    "finalUrl": "https://www.cloudflare.com/careers/",
+    "ats": [],
+    "title": "Cloudflare Careers | Cloudflare"
+  },
+  {
+    "id": "digitalocean",
+    "name": "DigitalOcean Careers",
+    "url": "https://digitalocean.com/careers",
+    "checked": "2026-11-10T03:17:50.311842+00:00",
+    "status": 200,
+    "finalUrl": "https://digitalocean.com/careers",
+    "ats": [],
+    "title": "Site Unavailable"
+  },
+  {
+    "id": "hashicorp",
+    "name": "HashiCorp Careers",
+    "url": "https://hashicorp.com/careers",
+    "checked": "2026-11-10T03:17:51.858656+00:00",
+    "status": 200,
+    "finalUrl": "https://www.hashicorp.com/en/careers",
+    "ats": [],
+    "title": "Careers Overview"
+  },
+  {
+    "id": "docker",
+    "name": "Docker Careers",
+    "url": "https://docker.com/careers",
+    "checked": "2026-11-10T03:17:53.316616+00:00",
+    "status": 200,
+    "finalUrl": "https://www.docker.com/careers/",
+    "ats": [],
+    "title": "Docker Careers | Docker"
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel Careers",
+    "url": "https://vercel.com/careers",
+    "checked": "2026-11-10T03:17:53.381062+00:00",
+    "status": 200,
+    "finalUrl": "https://vercel.com/careers",
+    "ats": [
+      {
+        "provider": "greenhouse",
+        "board": "vercel"
+      }
+    ],
+    "title": "Careers"
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify Careers",
+    "url": "https://netlify.com/careers",
+    "checked": "2026-11-10T03:17:53.532513+00:00",
+    "status": 200,
+    "finalUrl": "https://www.netlify.com/careers/",
+    "ats": [
+      {
+        "provider": "greenhouse",
+        "board": "netlify"
+      }
+    ],
+    "title": "Careers at Netlify"
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe Careers",
+    "url": "https://stripe.com/jobs",
+    "checked": "2026-11-10T03:17:54.126562+00:00",
+    "status": 200,
+    "finalUrl": "https://stripe.com/careers",
+    "ats": [],
+    "title": "Stripe Careers | Shape the Future of the Global Economy"
+  },
+  {
+    "id": "airbnb",
+    "name": "Airbnb Careers",
+    "url": "https://careers.airbnb.com",
+    "checked": "2026-11-10T03:17:56.853811+00:00",
+    "status": 200,
+    "finalUrl": "https://careers.airbnb.com",
+    "ats": [],
+    "title": "Home - Careers at Airbnb"
+  },
+  {
+    "id": "coinbase",
+    "name": "Coinbase Careers",
+    "url": "https://coinbase.com/careers",
+    "checked": "2026-11-10T03:18:01.029320+00:00",
+    "status": 200,
+    "finalUrl": "https://www.coinbase.com/careers",
+    "ats": [],
+    "title": "Coinbase Careers"
+  },
+  {
+    "id": "notion",
+    "name": "Notion Careers",
+    "url": "https://notion.com/careers",
+    "checked": "2026-11-10T03:18:03.571253+00:00",
+    "status": 200,
+    "finalUrl": "https://www.notion.com/careers",
+    "ats": [
+      {
+        "provider": "ashby",
+        "board": "notion"
+      }
+    ],
+    "title": "Careers at Notion | We're Hiring!"
+  },
+  {
+    "id": "clickup",
+    "name": "ClickUp Careers",
+    "url": "https://clickup.com/careers",
+    "checked": "2026-11-10T03:18:03.886368+00:00",
+    "status": 200,
+    "finalUrl": "https://clickup.com/careers",
+    "ats": [],
+    "title": "Careers | ClickUp\u2122"
+  },
+  {
+    "id": "asana",
+    "name": "Asana Careers",
+    "url": "https://asana.com/jobs",
+    "checked": "2026-11-10T03:18:04.810935+00:00",
+    "status": 200,
+    "finalUrl": "https://asana.com/jobs",
+    "ats": [],
+    "title": "Apply for a career with Asana \u2022 Asana"
+  },
+  {
+    "id": "atlassian",
+    "name": "Atlassian Careers",
+    "url": "https://atlassian.com/company/careers",
+    "checked": "2026-11-10T03:18:05.455092+00:00",
+    "status": 200,
+    "finalUrl": "https://www.atlassian.com/company/careers",
+    "ats": [],
+    "title": "Atlassian Careers: Join the Team | Atlassian"
+  },
+  {
+    "id": "dropbox",
+    "name": "Dropbox Careers",
+    "url": "https://www.dropbox.jobs/en/jobs",
+    "checked": "2026-11-10T03:20:32.745512+00:00",
+    "status": 200,
+    "finalUrl": "https://www.dropbox.jobs/en/jobs",
+    "ats": [],
+    "originalCheck": {
+      "url": "https://dropbox.com/jobs",
+      "finalUrl": "https://www.dropbox.com/jobs",
+      "status": 404,
+      "error": null
+    }
+  },
+  {
+    "id": "github",
+    "name": "GitHub Careers",
+    "url": "https://github.careers",
+    "checked": "2026-11-10T03:18:09.010266+00:00",
+    "status": 403,
+    "finalUrl": "https://www.github.careers/",
+    "ats": []
+  },
+  {
+    "id": "canva",
+    "name": "Canva Careers",
+    "url": "https://canva.com/careers",
+    "checked": "2026-11-10T03:18:09.924178+00:00",
+    "status": 200,
+    "finalUrl": "https://www.lifeatcanva.com/en/",
+    "ats": [],
+    "title": "Join our mission to empower the world to design. | Canva Careers"
+  },
+  {
+    "id": "figma",
+    "name": "Figma Careers",
+    "url": "https://figma.com/careers",
+    "checked": "2026-11-10T03:18:10.360644+00:00",
+    "status": 200,
+    "finalUrl": "https://www.figma.com/careers/",
+    "ats": [
+      {
+        "provider": "greenhouse",
+        "board": "figma"
+      }
+    ],
+    "title": "Careers at Figma"
+  },
+  {
+    "id": "hubspot",
+    "name": "HubSpot Careers",
+    "url": "https://hubspot.com/careers",
+    "checked": "2026-11-10T03:18:13.443075+00:00",
+    "status": 200,
+    "finalUrl": "https://www.hubspot.com/careers",
+    "ats": [],
+    "title": "HubSpot Careers"
+  },
+  {
+    "id": "salesforce",
+    "name": "Salesforce Careers",
+    "url": "https://careers.salesforce.com",
+    "checked": "2026-11-10T03:18:13.594209+00:00",
+    "status": 200,
+    "finalUrl": "https://www.salesforce.com/company/careers/?bc=OTH",
+    "ats": [],
+    "title": "Salesforce Careers | Build the Future of AI with Us | Salesforce"
+  },
+  {
+    "id": "twilio",
+    "name": "Twilio Careers",
+    "url": "https://twilio.com/company/jobs",
+    "checked": "2026-11-10T03:18:14.590154+00:00",
+    "status": 200,
+    "finalUrl": "https://jobs.twilio.com/careers",
+    "ats": [],
+    "title": "Careers at Twilio"
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit Careers",
+    "url": "https://redditinc.com/careers",
+    "checked": "2026-11-10T03:18:17.159344+00:00",
+    "status": 200,
+    "finalUrl": "https://redditinc.com/careers",
+    "ats": [
+      {
+        "provider": "greenhouse",
+        "board": "reddit"
+      }
+    ],
+    "title": "Careers - Reddit"
+  },
+  {
+    "id": "quora",
+    "name": "Quora Careers",
+    "url": "https://quora.com/careers",
+    "checked": "2026-11-10T03:18:18.987301+00:00",
+    "status": 200,
+    "finalUrl": "https://careers.quora.com/",
+    "ats": [
+      {
+        "provider": "ashby",
+        "board": "quora"
+      }
+    ],
+    "title": "Quora Careers"
+  },
+  {
+    "id": "proton",
+    "name": "Proton Careers",
+    "url": "https://proton.me/careers",
+    "checked": "2026-11-10T03:18:25.251465+00:00",
+    "status": 200,
+    "finalUrl": "https://proton.me/careers",
+    "ats": [],
+    "title": "Career opportunities | Proton"
+  },
+  {
+    "id": "37signals",
+    "name": "37signals",
+    "url": "https://37signals.com/jobs",
+    "checked": "2026-11-10T03:18:25.323013+00:00",
+    "status": 200,
+    "finalUrl": "https://37signals.com/jobs",
+    "ats": [],
+    "title": "37signals \u2014 Working at 37signals"
+  },
+  {
+    "id": "servicenow",
+    "name": "ServiceNow Careers",
+    "url": "https://careers.servicenow.com",
+    "checked": "2026-11-10T03:18:25.384540+00:00",
+    "status": 200,
+    "finalUrl": "https://careers.servicenow.com",
+    "ats": [],
+    "title": "ServiceNow Careers - Join the team putting AI to work for people. | ServiceNow Careers"
+  },
+  {
+    "id": "adobe",
+    "name": "Adobe Careers",
+    "url": "https://careers.adobe.com",
+    "checked": "2026-11-10T03:18:29.588514+00:00",
+    "status": 200,
+    "finalUrl": "https://careers.adobe.com/us/en",
+    "ats": [],
+    "title": "Careers at Adobe | Adobe job opportunities."
+  },
+  {
+    "id": "ibm",
+    "name": "IBM Careers",
+    "url": "https://ibm.com/careers",
+    "checked": "2026-11-10T03:18:29.867169+00:00",
+    "status": 200,
+    "finalUrl": "https://ibm.com/careers",
+    "ats": [],
+    "title": "Site Unavailable"
+  },
+  {
+    "id": "microsoft",
+    "name": "Microsoft Careers",
+    "url": "https://careers.microsoft.com",
+    "checked": "2026-11-10T03:18:30.034295+00:00",
+    "status": 200,
+    "finalUrl": "https://careers.microsoft.com/v2/global/en/home.html",
+    "ats": [],
+    "title": "Home | Microsoft Careers"
+  },
+  {
+    "id": "google",
+    "name": "Google Careers",
+    "url": "https://careers.google.com",
+    "checked": "2026-11-10T03:18:30.749758+00:00",
+    "status": 200,
+    "finalUrl": "https://www.google.com/about/careers/applications/",
+    "ats": [],
+    "title": "Search for your career at Google."
+  },
+  {
+    "id": "nvidia",
+    "name": "NVIDIA Careers",
+    "url": "https://nvidia.com/en-us/about-nvidia/careers",
+    "checked": "2026-11-10T03:18:31.786261+00:00",
+    "status": 200,
+    "finalUrl": "https://www.nvidia.com/en-us/about-nvidia/careers/",
+    "ats": [],
+    "title": "Jobs at NVIDIA | NVIDIA Careers"
+  },
+  {
+    "id": "aws",
+    "name": "AWS Careers",
+    "url": "https://www.amazon.jobs/content/en/teams/amazon-web-services",
+    "checked": "2026-11-10T03:20:28.645733+00:00",
+    "status": 200,
+    "finalUrl": "https://www.amazon.jobs/content/en/teams/amazon-web-services",
+    "ats": [],
+    "originalCheck": {
+      "url": "https://amazon.jobs/en/teams/aws",
+      "finalUrl": "https://amazon.jobs/en/teams/aws",
+      "status": 404,
+      "error": null
+    }
+  },
+  {
+    "id": "oracle",
+    "name": "Oracle Careers",
+    "url": "https://oracle.com/careers",
+    "checked": "2026-11-10T03:18:36.236877+00:00",
+    "status": 200,
+    "finalUrl": "https://oracle.com/careers",
+    "ats": [],
+    "title": "Site Unavailable"
+  },
+  {
+    "id": "sap",
+    "name": "SAP Careers",
+    "url": "https://jobs.sap.com",
+    "checked": "2026-11-10T03:18:37.025999+00:00",
+    "status": 200,
+    "finalUrl": "https://jobs.sap.com/en/",
+    "ats": [],
+    "title": "Build a future at SAP | SAP Careers"
+  },
+  {
+    "id": "cisco",
+    "name": "Cisco Careers",
+    "url": "https://jobs.cisco.com",
+    "checked": "2026-11-10T03:18:38.179137+00:00",
+    "status": 200,
+    "finalUrl": "https://jobs.cisco.com",
+    "ats": [],
+    "title": "Site Unavailable"
+  }
+]

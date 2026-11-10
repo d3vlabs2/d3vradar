@@ -1,0 +1,1 @@
+{"manifest_version":3,"name":"D3V Radar Answer Helper","version":"2.0.0","description":"Fill recognized application questions with your saved answers, on your click. Never submits forms.","permissions":["activeTab","scripting","storage"],"action":{"default_popup":"popup.html","default_title":"Radar Answer Helper"},"icons":{"128":"icon.png"}}

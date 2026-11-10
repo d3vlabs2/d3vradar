@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict');const {choose,category}=require('../extension/matcher.js');
+const p={veteran:false,disability:false,needs_sponsorship:false,felony:false,us_citizen:true,authorized_us:true};
+assert.equal(choose('Veteran status',['Select','I am a protected veteran','I am not a protected veteran','I prefer not to answer'],p).index,2);
+assert.equal(choose('Disability status',['Yes, I have a disability','No, I do not have a disability','I do not want to answer'],p).index,1);
+assert.equal(choose('Will you now or in the future require visa sponsorship?',['Yes','No'],p).index,1);
+assert.equal(choose('Have you ever been convicted of a felony?',['Yes','No'],p).index,1);
+assert.equal(choose('Are you a US citizen?',['Yes','No'],p).index,0);
+assert.equal(choose('Are you legally authorized to work in the United States?',['Yes','No'],p).index,0);
+assert.equal(category('Are you NOT legally authorized to work in the United States?'),null);
+assert.equal(category('Do you require a disability accommodation?'),null);
+assert.equal(category('Do you have a disability or have you ever had one?'),null);
+assert.equal(category('I certify that I am a US citizen'),null);
+assert.equal(category('Have you had a misdemeanor or felony?'),null);
+assert.equal(category('Have you had a felony in the last 7 years?'),null);
+assert.equal(choose('Veteran status',['Yes','No','No'],p).index,-1);
+assert.equal(category('Are you a US citizen or permanent resident?'),null);
+assert.equal(choose('Are you a US citizen?',['Yes','No'],{...p,us_citizen:false}).index,1);
+console.log('15 answer-matching checks passed.');
