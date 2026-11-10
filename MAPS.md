@@ -20,3 +20,7 @@ Documentation:
 - https://developers.google.com/maps/documentation/embed/get-api-key
 
 Validation: 85 backend tests, 18 Maps assertions, 19 date/statistics assertions and 15 extension checks passed. Browser preview confirmed a hybrid Buffalo listing's Maps panel and a correctly encoded route from the synthetic Albany home location. Encrypted origin persistence and optional office addresses were tested. An active Maps Embed API key was unavailable, so actual in-frame Google rendering/distance requires verification after key configuration. No precise user home address was sent during testing. The homelab has not been changed by these tests.
+
+In 2.8, Profile labels the default as **Home address for directions**. Commute dialogs
+prefill it in **Starting address**, which can be overridden for one route without
+changing the saved profile. If no street address is saved, the home location is used.
