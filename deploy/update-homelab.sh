@@ -14,6 +14,15 @@ main() {
   [[ "$branch" == main ]] || { echo 'Switch the source checkout to main first.' >&2; return 1; }
   git -C "$source" pull --ff-only origin main
   python3 "$source/deploy/check_ci.py" "$(git -C "$source" rev-parse HEAD)"
+  # Snapshot all workspace DBs before replacing code; works with legacy images too.
+  cd -- "$target"
+  umask 077
+  mkdir -p backups
+  local backup_name="backups/radar-before-update-$(date +%Y%m%d-%H%M%S).tar.gz"
+  sudo docker compose exec -T radar python - /tmp/radar-before-update.tar.gz < "$source/radar/backup.py"
+  sudo docker compose cp radar:/tmp/radar-before-update.tar.gz "$backup_name"
+  sudo chmod 600 "$backup_name"
+  echo "Database backup saved: $backup_name"
   python3 "$source/deploy/apply_update.py" "$target"
   cd -- "$target"
   sudo docker compose up -d --build --force-recreate --wait --wait-timeout 120

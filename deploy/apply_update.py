@@ -8,7 +8,7 @@ import shutil
 import sys
 import tempfile
 
-ROOT_FILES = {'Dockerfile','compose.yaml','requirements.txt','requirements.lock','package.json','README.md','MAPS.md','CONTRIBUTING.md','requirements-dev.txt','VERIFICATION.md','APPLICATION_SOURCES.md','.dockerignore','.gitignore','.env.example'}
+ROOT_FILES = {'Dockerfile','compose.yaml','requirements.txt','requirements.lock','package.json','README.md','MAPS.md','BETA.md','CONTRIBUTING.md','requirements-dev.txt','VERIFICATION.md','APPLICATION_SOURCES.md','.dockerignore','.gitignore','.env.example'}
 ROOT_DIRS = {'radar','deploy','tests','templates','extension'}
 
 def apply(source, target):

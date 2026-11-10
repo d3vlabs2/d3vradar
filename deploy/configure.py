@@ -13,11 +13,11 @@ if args.local:
 else:
     team=input('Cloudflare Access team domain (name.cloudflareaccess.com): ').strip().removeprefix('https://').rstrip('/')
     aud=input('Access application AUD tag: ').strip()
-    email=input('Allowed sign-in email: ').strip()
+    email=input('Owner sign-in email: ').strip().lower()
     origin=input('Radar public origin (https://radar.example.com): ').strip().rstrip('/')
     if not re.fullmatch(r'https://[a-zA-Z0-9.-]+',origin):raise SystemExit('Enter an HTTPS origin without a path.')
-    if not re.fullmatch(r'[a-z0-9-]+\.cloudflareaccess\.com',team) or not re.fullmatch(r'[a-zA-Z0-9_-]+',aud) or not re.fullmatch(r'[A-Za-z0-9._%+@,-]+',email) or '@' not in email:raise SystemExit('Enter the Access application details before starting the protected service.')
-    values={'RADAR_AUTH_MODE':'cloudflare','RADAR_ORIGIN':origin,'CF_ACCESS_TEAM':team,'CF_ACCESS_AUD':aud,'RADAR_ALLOWED_EMAILS':email}
+    if not re.fullmatch(r'[a-z0-9-]+\.cloudflareaccess\.com',team) or not re.fullmatch(r'[a-zA-Z0-9_-]+',aud) or not re.fullmatch(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+',email):raise SystemExit('Enter the Access application details before starting the protected service.')
+    values={'RADAR_AUTH_MODE':'cloudflare','RADAR_ORIGIN':origin,'CF_ACCESS_TEAM':team,'CF_ACCESS_AUD':aud,'RADAR_OWNER_EMAIL':email,'RADAR_ALLOWED_EMAILS':email}
 values.update(RADAR_ENCRYPTION_KEY=key,RADAR_SCHEDULER='true',BRAVE_SEARCH_API_KEY='')
 fd=os.open(env,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
 with os.fdopen(fd,'w') as f:f.write(''.join(k+'='+v+'\n' for k,v in values.items()))
