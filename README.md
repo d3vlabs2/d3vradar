@@ -7,8 +7,12 @@ uploads, job-specific draft preparation, application history, follow-up drafts,
 and dashboard statistics. Manual imports fetch job details where the source permits.
 A Chrome extension helps fill recognized application questions with reviewed profile answers.
 
-Version **2.6.0** adds Google Maps links and directions for job locations, optional
-embedded maps, and an encrypted home-address setting. See [MAPS.md](MAPS.md).
+Version **2.7.0** adds private beta workspaces per approved login. Read
+[BETA.md](BETA.md) before inviting friends; the existing workspace stays assigned
+to its configured owner. Shared public-feed caching keeps personal records separate.
+
+Google Maps links and directions for job locations, optional
+embedded maps, and an encrypted home-address setting are included. See [MAPS.md](MAPS.md).
 Exact travel distance is shown by Google Maps; Radar does not invent distances.
 
 ## Screenshots
@@ -53,7 +57,9 @@ The updater pulls main without resetting local changes, requires successful GitH
 CI for that exact commit, backs up changed code, and recreates the existing Compose
 service. It preserves .env and the data volume. Keep a secure separate backup of
 .env: its encryption key is required to decrypt existing documents and profiles.
-Code backups are not database backups. Use your existing data-backup process too.
+The updater also saves a database archive before replacing code. Keep secure
+off-host backups of that archive and the matching .env. See [BETA.md](BETA.md) for
+backup coverage and owner settings.
 
 For every future update, run:
 

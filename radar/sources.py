@@ -3,7 +3,7 @@ from urllib.parse import urlparse, quote_plus
 import httpx
 from .apply import source_audit
 from .catalog import expand_boards
-from .store import db,upsert_jobs,get_setting,DEFAULT_SEARCH
+from .store import db,upsert_jobs,get_setting,DEFAULT_SEARCH,current_workspace,cached_public_feed,cache_public_feed
 
 BOARDS=[
  {'id':'remotive','name':'Remotive','url':'https://remotive.com','mode':'api'},
@@ -170,13 +170,16 @@ async def fetch_board(client,b,s):
         if j:out.append(j)
     return out,True
 
-SCAN_RUNNING=False
+SCANNING=set()
+COLLECTION_LOCK=asyncio.Lock()
+def scan_running():return current_workspace() in SCANNING
+
 async def scan_sources():
-    global SCAN_RUNNING
-    if SCAN_RUNNING:return {'running':True}
-    SCAN_RUNNING=True;results=[]
-    search=get_setting('search',DEFAULT_SEARCH)
+    ident=current_workspace()
+    if ident in SCANNING:return {'running':True}
+    SCANNING.add(ident);results=[]
     try:
+        search=get_setting('search',DEFAULT_SEARCH)
         async with httpx.AsyncClient(timeout=httpx.Timeout(25,connect=8),follow_redirects=True,headers={'User-Agent':'D3VJobRadar/2.3 (personal job search)','Accept':'application/json'}) as client:
             for b in BOARDS:
                 now=time.time()
@@ -188,10 +191,17 @@ async def scan_sources():
                     if row['lease']>now or (row['fingerprint']==fp and row['checked']>now-cooldown) or row['checked']>now-60:results.append({'id':b['id'],'cached':True});continue
                     c.execute('UPDATE source_runs SET checked=?,lease=?,fingerprint=? WHERE id=?',(now,now+180,fp,b['id']))
                 try:
-                    try:jobs,snapshot=await fetch_board(client,b,search)
-                    except Exception:
-                        if b['mode']!='mcp' or not os.getenv('BRAVE_SEARCH_API_KEY'):raise
-                        jobs=await indexed_search(client,b,search);snapshot=False
+                    # Same public feed/query is fetched once for all beta workspaces.
+                    cache_key=hashlib.sha256(json.dumps([b,fp,bool(os.getenv('BRAVE_SEARCH_API_KEY'))],sort_keys=True).encode()).hexdigest()
+                    async with COLLECTION_LOCK:
+                        cached=cached_public_feed(cache_key)
+                        if cached is not None:jobs,snapshot=cached
+                        else:
+                            try:jobs,snapshot=await fetch_board(client,b,search)
+                            except Exception:
+                                if b['mode']!='mcp' or not os.getenv('BRAVE_SEARCH_API_KEY'):raise
+                                jobs=await indexed_search(client,b,search);snapshot=False
+                            cache_public_feed(cache_key,jobs,snapshot)
                     upsert_jobs(b['id'],jobs,snapshot)
                     with db() as c:c.execute("UPDATE source_runs SET success=?,count=?,error='',lease=0 WHERE id=?",(time.time(),len(jobs),b['id']))
                     results.append({'id':b['id'],'count':len(jobs)})
@@ -200,7 +210,7 @@ async def scan_sources():
                     message=str(e) if isinstance(e,ValueError) else f'{type(e).__name__}: could not retrieve this source. Existing jobs were retained.'
                     with db() as c:c.execute('UPDATE source_runs SET error=?,lease=0 WHERE id=?',(message[:400],b['id']))
                     results.append({'id':b['id'],'error':message[:400]})
-    finally:SCAN_RUNNING=False
+    finally:SCANNING.discard(ident)
     return {'results':results}
 
 def source_status():

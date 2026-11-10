@@ -1,4 +1,6 @@
-import os, sqlite3, json, time
+import os, sqlite3, json, time, hashlib, hmac
+from contextvars import ContextVar
+from threading import RLock
 from pathlib import Path
 from contextlib import contextmanager
 from cryptography.fernet import Fernet
@@ -11,6 +13,93 @@ if not key:
     raise RuntimeError('RADAR_ENCRYPTION_KEY must be set. Run deploy/configure.py first.')
 CIPHER=Fernet(key.encode())
 DB_PATH=DATA/'radar.sqlite'
+CURRENT_WORKSPACE=ContextVar('radar_workspace',default=None)
+OWNER_EMAIL=None
+REGISTRY=DATA/'workspaces.sqlite'
+WORKSPACE_LOCK=RLock()
+
+@contextmanager
+def registry():
+    c=sqlite3.connect(REGISTRY,timeout=30)
+    c.row_factory=sqlite3.Row
+    try:
+        c.executescript('CREATE TABLE IF NOT EXISTS metadata(id TEXT PRIMARY KEY,payload BLOB NOT NULL); CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email BLOB NOT NULL); CREATE TABLE IF NOT EXISTS public_feeds(id TEXT PRIMARY KEY,payload BLOB NOT NULL,created REAL NOT NULL);')
+        os.chmod(REGISTRY,0o600)
+        yield c
+        c.commit()
+    except Exception:
+        c.rollback();raise
+    finally:c.close()
+
+def configure_workspaces(mode,allowed,owner=''):
+    # The owner is chosen by server configuration, never by the first visitor.
+    global OWNER_EMAIL
+    if mode=='local':
+        OWNER_EMAIL='local';return
+    owner=owner.strip().lower()
+    with registry() as c:
+        row=c.execute("SELECT payload FROM metadata WHERE id='owner'").fetchone()
+        bound=unseal(row['payload']) if row else None
+        if bound and owner and bound!=owner:
+            raise RuntimeError('RADAR_OWNER_EMAIL differs from the persisted workspace owner. Ownership cannot be reassigned by changing the allowlist.')
+        owner=bound or owner or (next(iter(allowed)) if len(allowed)==1 else '')
+        if not owner or owner not in allowed:
+            raise RuntimeError('Set RADAR_OWNER_EMAIL to the existing owner and include that email in RADAR_ALLOWED_EMAILS before enabling multiple users.')
+        if not bound:c.execute("INSERT INTO metadata VALUES('owner',?)",(seal(owner),))
+    OWNER_EMAIL=owner
+
+def workspace_key(email):
+    if not isinstance(email,str) or not email:raise RuntimeError('Verified workspace identity required')
+    if OWNER_EMAIL is None:raise RuntimeError('Workspace owner has not been configured')
+    return 'owner' if email.lower()==OWNER_EMAIL else hmac.new(key.encode(),email.lower().encode(),hashlib.sha256).hexdigest()
+
+@contextmanager
+def workspace_context(email):
+    token=CURRENT_WORKSPACE.set(workspace_key(email))
+    try:yield
+    finally:CURRENT_WORKSPACE.reset(token)
+
+def current_workspace():
+    current=CURRENT_WORKSPACE.get()
+    if current is None:
+        if os.getenv('RADAR_AUTH_MODE')=='local':return 'owner'
+        raise RuntimeError('Database access requires a verified workspace context')
+    return current
+
+def workspace_path():
+    ident=current_workspace()
+    if ident=='owner':return DB_PATH
+    parent=DATA/'workspaces';parent.mkdir(mode=0o700,exist_ok=True)
+    return parent/(ident+'.sqlite')
+
+def ensure_workspace(email):
+    # Called only after JWT + allowlist validation. Each DB keeps the existing schema.
+    with WORKSPACE_LOCK,workspace_context(email):
+        ident=current_workspace()
+        with registry() as c:
+            known=c.execute('SELECT 1 FROM users WHERE id=?',(ident,)).fetchone()
+        if not known or not workspace_path().exists():
+            init()
+            existing_profile=get_setting('profile') is not None
+            if get_setting('profile_reviewed') is None:put_setting('profile_reviewed',existing_profile)
+            if get_setting('profile') is None:put_setting('profile',{**DEFAULT_PROFILE,'email':'' if email=='local' else email})
+            if get_setting('search') is None:put_setting('search',DEFAULT_SEARCH)
+            with registry() as c:c.execute('INSERT OR REPLACE INTO users VALUES(?,?)',(ident,seal(email)))
+
+def workspace_emails(allowed):
+    with registry() as c:emails=[unseal(r['email']) for r in c.execute('SELECT email FROM users')]
+    return [email for email in emails if email in allowed]
+
+def cached_public_feed(cache_key):
+    with registry() as c:row=c.execute('SELECT payload FROM public_feeds WHERE id=? AND created>?',(cache_key,time.time()-43200)).fetchone()
+    return unseal(row['payload']) if row else None
+
+def cache_public_feed(cache_key,jobs,snapshot):
+    # Only connector responses enter this shared cache, never imports or personal records.
+    with registry() as c:
+        c.execute('DELETE FROM public_feeds WHERE created<?',(time.time()-43200,))
+        c.execute('INSERT OR REPLACE INTO public_feeds VALUES(?,?,?)',(cache_key,seal([jobs,snapshot]),time.time()))
+
 
 def seal(value):
     return CIPHER.encrypt(json.dumps(value,ensure_ascii=False).encode())
@@ -18,7 +107,7 @@ def unseal(value):
     return json.loads(CIPHER.decrypt(value))
 @contextmanager
 def db():
-    c=sqlite3.connect(DB_PATH,timeout=30)
+    c=sqlite3.connect(workspace_path(),timeout=30)
     c.row_factory=sqlite3.Row
     c.execute('PRAGMA foreign_keys=ON')
     try:
@@ -45,7 +134,7 @@ CREATE TABLE IF NOT EXISTS queue(job_id TEXT PRIMARY KEY REFERENCES jobs(id),sta
     with db() as c:
         if 'fingerprint' not in {r['name'] for r in c.execute('PRAGMA table_info(source_runs)')}:
             c.execute("ALTER TABLE source_runs ADD COLUMN fingerprint TEXT NOT NULL DEFAULT ''")
-    os.chmod(DB_PATH,0o600)
+    os.chmod(workspace_path(),0o600)
 
 def get_setting(key,default=None):
     with db() as c:r=c.execute('SELECT payload FROM settings WHERE id=?',(key,)).fetchone()

@@ -17,3 +17,6 @@ backups/
 *.zip
 *.log
 migration.json
+
+workspaces/
+*.tar.gz

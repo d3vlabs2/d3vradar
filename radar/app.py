@@ -10,48 +10,60 @@ from .apply import application_options
 from .importer import fetch_details
 from .store import db,init,seal,unseal,get_setting,put_setting,get_job,upsert_jobs,DEFAULT_PROFILE,DEFAULT_SEARCH
 from .security import guard,validate_config
+from . import security
+from .store import configure_workspaces,workspace_context,ensure_workspace,workspace_emails
 from .documents import extract,MAX_SIZE,docx_bytes,pdf_bytes
 from .drafts import prepare,prepare_followup,drain_queue,draft_due_followups
 
+async def maintain_workspaces():
+    allowed={'local'} if security.MODE=='local' else security.ALLOWED
+    for email in workspace_emails(allowed):
+        with workspace_context(email):
+            try:
+                await sources.scan_sources()
+                if get_setting('search',DEFAULT_SEARCH).get('auto_prepare'):
+                    await asyncio.to_thread(drain_queue,5)
+                await asyncio.to_thread(draft_due_followups,5)
+            except asyncio.CancelledError:raise
+            except Exception:
+                # One workspace failure must not interrupt other users' maintenance.
+                pass
+
 async def maintenance():
-    last=0
     while True:
-        try:
-            if time.time()-last>43200:
-                await sources.scan_sources();last=time.time()
-            if get_setting('search',DEFAULT_SEARCH).get('auto_prepare'):
-                await asyncio.to_thread(drain_queue,5)
-            await asyncio.to_thread(draft_due_followups,5)
+        try:await maintain_workspaces()
         except asyncio.CancelledError:raise
-        except Exception:
-            # Per-source/queue errors are saved by their workers; keep the scheduler alive.
-            pass
+        except Exception:pass
         await asyncio.sleep(30)
 
 @asynccontextmanager
 async def lifespan(app):
-    validate_config();init()
-    if get_setting('profile') is None:put_setting('profile',DEFAULT_PROFILE)
-    if get_setting('search') is None:put_setting('search',DEFAULT_SEARCH)
+    validate_config()
+    sources.COLLECTION_LOCK=asyncio.Lock()
+    configure_workspaces(security.MODE,security.ALLOWED,os.getenv('RADAR_OWNER_EMAIL',''))
+    from .store import OWNER_EMAIL
+    ensure_workspace(OWNER_EMAIL)
     task=None
     if os.getenv('RADAR_SCHEDULER','true')=='true':task=asyncio.create_task(maintenance())
     yield
+    for scan_task in list(running_tasks):scan_task.cancel()
+    if running_tasks:await asyncio.gather(*list(running_tasks),return_exceptions=True)
     if task:
         task.cancel()
         try:await task
         except asyncio.CancelledError:pass
 
-app=FastAPI(title='D3V Job Radar',version='2.6.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
+app=FastAPI(title='D3V Job Radar',version='2.7.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
 app.middleware('http')(guard)
 @app.exception_handler(ValueError)
 async def value_error(request,exc):return JSONResponse({'detail':str(exc)},400)
 @app.get('/health')
-def health():return {'status':'ok','version':'2.6.0'}
+def health():return {'status':'ok','version':'2.7.0'}
 
 class Profile(BaseModel):
     name:str=Field(max_length=150);email:str=Field(default='',max_length=250);location:str=Field(default='',max_length=150)
     home_address:str=Field(default='',max_length=300)
-    veteran:bool=False;disability:bool=False;needs_sponsorship:bool=False;felony:bool=False;us_citizen:bool=True;authorized_us:bool=True
+    veteran:bool=False;disability:bool=False;needs_sponsorship:bool=False;felony:bool=False;us_citizen:bool=False;authorized_us:bool=False
 class SearchProfile(BaseModel):
     keywords:str=Field(min_length=2,max_length=150);location:str=Field(max_length=150);workplace:str='remote';auto_prepare:bool=True;followup_days:int=Field(default=7,ge=1,le=90)
 class ImportedJob(BaseModel):
@@ -66,19 +78,21 @@ class TextUpdate(BaseModel):
     text:str=Field(min_length=30,max_length=150000)
 
 @app.get('/api/workspace')
-def workspace():
+def workspace(request:Request):
     with db() as c:
         jobs=[{**json.loads(r['payload']),'active':bool(r['active']) and not (json.loads(r['payload']).get('expires') and float(json.loads(r['payload'])['expires'])<time.time()),'firstSeen':r['first_seen']} for r in c.execute('SELECT * FROM jobs ORDER BY first_seen DESC LIMIT 3000')]
         applications=[{**{k:r[k] for k in ['job_id','status','applied','followup','updated']},'notes':unseal(r['notes'])} for r in c.execute('SELECT * FROM applications')]
         documents=[{k:r[k] for k in ['id','kind','name','created','active']} for r in c.execute('SELECT * FROM documents ORDER BY created DESC')]
         drafts=[{k:r[k] for k in ['id','job_id','kind','created','approved']} for r in c.execute('SELECT id,job_id,kind,created,approved FROM drafts ORDER BY created DESC')]
         queue={r['status']:r['n'] for r in c.execute('SELECT status,COUNT(*) n FROM queue GROUP BY status')}
-    return {'jobs':jobs,'applications':applications,'documents':documents,'drafts':drafts,'sources':sources.source_status(),'profile':get_setting('profile',DEFAULT_PROFILE),'search':get_setting('search',DEFAULT_SEARCH),'scanRunning':sources.SCAN_RUNNING,'queue':queue,'scheduler':os.getenv('RADAR_SCHEDULER','true')=='true','indexedSearch':bool(os.getenv('BRAVE_SEARCH_API_KEY')),'mapsEmbedKey':os.getenv('GOOGLE_MAPS_EMBED_API_KEY','').strip()}
+    return {'identity':{'email':request.state.identity,'privateWorkspace':True,'mode':security.MODE},'jobs':jobs,'applications':applications,'documents':documents,'drafts':drafts,'sources':sources.source_status(),'profile':get_setting('profile',DEFAULT_PROFILE),'search':get_setting('search',DEFAULT_SEARCH),'scanRunning':sources.scan_running(),'queue':queue,'scheduler':os.getenv('RADAR_SCHEDULER','true')=='true','indexedSearch':bool(os.getenv('BRAVE_SEARCH_API_KEY')),'mapsEmbedKey':os.getenv('GOOGLE_MAPS_EMBED_API_KEY','').strip()}
 
 @app.put('/api/profile')
-def profile_save(p:Profile):put_setting('profile',p.model_dump());return {'ok':True}
+def profile_save(p:Profile):
+    put_setting('profile',p.model_dump());put_setting('profile_reviewed',True);return {'ok':True}
 @app.get('/api/profile/answers')
 def answers():
+    if not get_setting('profile_reviewed',False):raise ValueError('Review every answer in Profile and save it before exporting an answer pack.')
     p=get_setting('profile',DEFAULT_PROFILE)
     return {'schema':1,'veteran':p['veteran'],'disability':p['disability'],'needs_sponsorship':p['needs_sponsorship'],'felony':p['felony'],'us_citizen':p['us_citizen'],'authorized_us':p['authorized_us']}
 @app.put('/api/search')
@@ -91,7 +105,7 @@ def search_save(s:SearchProfile):
     return {'ok':True,'nextScan':'Changed queries are collected on the next scan. Repeated queries keep a 12-hour cache; one-minute minimum between source attempts.'}
 @app.post('/api/scan')
 async def scan():
-    if sources.SCAN_RUNNING:return {'running':True}
+    if sources.scan_running():return {'running':True}
     task=asyncio.create_task(sources.scan_sources())
     # Keep a strong reference until the background scan is finished.
     running_tasks.add(task);task.add_done_callback(running_tasks.discard)

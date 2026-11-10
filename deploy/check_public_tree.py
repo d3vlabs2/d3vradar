@@ -5,10 +5,11 @@ import subprocess
 
 def forbidden(name):
     p = PurePosixPath(name)
-    return (any(part in {'data', 'backups', '.radar-backups', '.venv', 'venv', '__pycache__'} for part in p.parts)
+    return (any(part in {'data', 'backups', '.radar-backups', 'workspaces', '.venv', 'venv', '__pycache__'} for part in p.parts)
             or (p.name.startswith('.env') and p.name != '.env.example')
             or p.name == 'migration.json'
-            or p.suffix in {'.db', '.sqlite', '.sqlite3', '.zip', '.pem', '.key'}
+            or '.sqlite-' in p.name or '.db-' in p.name
+            or p.suffix in {'.db', '.sqlite', '.sqlite3', '.zip', '.gz', '.tar', '.pem', '.key'}
             or p.name in {'id_ed25519', 'id_rsa'})
 
 
