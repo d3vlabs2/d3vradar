@@ -11,7 +11,7 @@ def backup_all(destination,data_dir=None):
     data=Path(data_dir or os.getenv('RADAR_DATA','./data'))
     registry=data/'workspaces.sqlite'
     destination=Path(destination)
-    with tempfile.TemporaryDirectory(prefix='radar-backup-') as temp:
+    with tempfile.TemporaryDirectory(prefix='.radar-backup-',dir=data) as temp:
         # Block new workspace registrations while enumerating DBs. Existing requests
         # can continue; SQLite's backup API produces a consistent snapshot per DB.
         lock=sqlite3.connect(registry,timeout=30) if registry.exists() else None

@@ -19,9 +19,10 @@ main() {
   umask 077
   mkdir -p backups
   local backup_name="backups/radar-before-update-$(date +%Y%m%d-%H%M%S).tar.gz"
-  sudo docker compose exec -T radar python - /tmp/radar-before-update.tar.gz < "$source/radar/backup.py"
-  sudo docker compose cp radar:/tmp/radar-before-update.tar.gz "$backup_name"
+  sudo docker compose exec -T radar python - /data/.radar-before-update.tar.gz < "$source/radar/backup.py"
+  sudo docker compose cp radar:/data/.radar-before-update.tar.gz "$backup_name"
   sudo chmod 600 "$backup_name"
+  sudo docker compose exec -T radar python -c 'from pathlib import Path; Path("/data/.radar-before-update.tar.gz").unlink()'
   echo "Database backup saved: $backup_name"
   python3 "$source/deploy/apply_update.py" "$target"
   cd -- "$target"

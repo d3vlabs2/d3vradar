@@ -103,6 +103,8 @@ cd ~/jobradar
 sudo bash deploy/backup.sh
 ```
 
+Backup staging uses the persistent data volume instead of the container's small
+/tmp filesystem so multiuser archives are not limited to its 64 MB tmpfs.
 The tar.gz includes consistent SQLite snapshots of the legacy owner database,
 encrypted workspace registry, and friend databases under hashed filenames. Keep
 its matching .env/encryption key privately. Snapshots are consistent per database;
