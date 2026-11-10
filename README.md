@@ -11,6 +11,34 @@ Version **2.6.0** adds Google Maps links and directions for job locations, optio
 embedded maps, and an encrypted home-address setting. See [MAPS.md](MAPS.md).
 Exact travel distance is shown by Google Maps; Radar does not invent distances.
 
+## Screenshots
+
+Captured from Radar 2.6 with fictional demo jobs and application records.
+Companies, counts, salaries, and locations illustrate the interface; these are not
+live vacancies or a real applicant history. The source view is an illustrative subset.
+
+### Discover jobs and search activity
+
+![Discover jobs with activity chart, search filters, and sample listings](docs/screenshots/discover.png)
+
+### Application tracking
+
+![Application history with saved statuses and follow-up visibility](docs/screenshots/applications.png)
+
+### Location and commute tools
+
+![Commute dialog with location, travel mode, and directions controls](docs/screenshots/commute.png)
+
+Google Maps opens on demand. The screenshot shows the controls without an embedded
+map or a claimed travel distance; an Embed API key is optional.
+
+### Source network
+
+![Source directory showing discovery and application access modes](docs/screenshots/sources.png)
+
+Maintainers can regenerate these images using the **Demo screenshots** workflow
+in GitHub Actions. It uses isolated fixtures and never contacts a homelab.
+
 ## Existing homelab: move from ZIP updates to GitHub
 
 Keep your existing `~/jobradar` installation, `.env`, encryption key, and Docker volume.
