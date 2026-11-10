@@ -1,4 +1,4 @@
-# Private beta workspaces (Radar 2.7)
+# Private beta workspaces (Radar 2.8)
 
 Each approved Cloudflare Access login email has its own workspace. Radar verifies
 JWT signature, issuer, audience, expiry, and email before selecting a database.
@@ -30,7 +30,7 @@ container must be running for this snapshot. The database archive is written to
 `~/jobradar/backups`; .env must be backed up separately. Do not commit either backup.
 The owner still uses the existing `/data/radar.sqlite`; it is not renamed or copied
 into a friend's database. Verify your profile, documents, and applications after
-updating. Health should show 2.7.0.
+updating. Health should show 2.8.0.
 
 The first upgrade can infer the owner if exactly one email is allowed. If more than
 one is allowed and no owner was configured or persisted, startup fails closed.
@@ -39,6 +39,9 @@ first cannot take ownership. Changing RADAR_OWNER_EMAIL to somebody else fails;
 this is not an account transfer tool.
 
 ## Invite a friend
+
+For Radar 2.8, use the Users screen described below. The environment-variable
+steps here remain available for initial/server configuration.
 
 1. Add the friend's exact sign-in email to RADAR_ALLOWED_EMAILS, preserving your
    own email and RADAR_OWNER_EMAIL:
@@ -110,3 +113,47 @@ encrypted workspace registry, and friend databases under hashed filenames. Keep
 its matching .env/encryption key privately. Snapshots are consistent per database;
 the backup is not a transaction spanning all users' databases. Do not run old 2.6
 code against a multiuser installation; it does not enforce workspace isolation.
+
+## Manage users in Radar (2.8+)
+
+After upgrading, the signed-in owner sees **Users** in the sidebar. Enter a friend's
+sign-in email and click **Add user**. This saves encrypted membership immediately;
+no .env edits or application restart are needed. The new workspace is created on
+their first successful login. No invitation email is sent.
+
+Cloudflare remains a separate gate. Add that same email to the existing Access
+Allow policy. **Copy approved emails for Cloudflare** copies the enabled list so you
+can paste it there. Radar does not change the Cloudflare policy or verify its state.
+Keep the current email policy; do not replace it with Everyone.
+
+Use **Disable** to deny the user's subsequent Radar API requests immediately while
+retaining their workspace, including when their email is still in the old .env
+allowlist. Also remove them from Cloudflare. **Enable** restores access to the same
+workspace. These changes survive restarts and are included in the encrypted registry
+backup. The owner cannot be disabled, reassigned, or created through this screen.
+Only the owner can view this email list or change access; other users cannot see it.
+
+For UI-managed users, use **Disable** to revoke app access; removing an email from
+RADAR_ALLOWED_EMAILS alone does not remove an explicit active UI membership. Keep
+the existing owner in RADAR_ALLOWED_EMAILS and preserve RADAR_OWNER_EMAIL and the
+encryption key. Local-token development mode does not offer multiuser management.
+
+## Default home address
+
+In **Profile → Home address for directions**, save your street address, city, state,
+and ZIP (or a less precise ZIP/city). Every **Map & commute → Directions from home**
+dialog prefills this saved address in **Starting address**. If it is empty, Radar
+uses your profile's general home location. You can edit the starting address for
+one trip without changing the saved profile, or use **Edit saved home address in
+Profile** to update the default. Address-only input is never inserted into generated
+resumes or letters. It stays encrypted in your own workspace and is shared with
+Google only when you choose to open/load a route.
+
+## One-dialog imports
+
+Click **Import job**, paste the URL, fetch/review the fields in that dialog, and
+optionally add notes. **Save to Saved jobs** commits the job and its bookmark
+together and returns to Saved jobs without opening another dialog. Saving is not
+applying. Open the saved role later to prepare documents or mark it applied. If
+the same job already has an application, importing it again preserves its status,
+applied/follow-up dates, and notes and returns to Applications instead.

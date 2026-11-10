@@ -2,7 +2,7 @@ import os, sqlite3, json, time, hashlib, hmac
 from contextvars import ContextVar
 from threading import RLock
 from pathlib import Path
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from cryptography.fernet import Fernet
 
 DATA=Path(os.environ.get('RADAR_DATA','./data'))
@@ -23,7 +23,7 @@ def registry():
     c=sqlite3.connect(REGISTRY,timeout=30)
     c.row_factory=sqlite3.Row
     try:
-        c.executescript('CREATE TABLE IF NOT EXISTS metadata(id TEXT PRIMARY KEY,payload BLOB NOT NULL); CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email BLOB NOT NULL); CREATE TABLE IF NOT EXISTS public_feeds(id TEXT PRIMARY KEY,payload BLOB NOT NULL,created REAL NOT NULL);')
+        c.executescript('CREATE TABLE IF NOT EXISTS metadata(id TEXT PRIMARY KEY,payload BLOB NOT NULL); CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email BLOB NOT NULL); CREATE TABLE IF NOT EXISTS members(id TEXT PRIMARY KEY,payload BLOB NOT NULL); CREATE TABLE IF NOT EXISTS public_feeds(id TEXT PRIMARY KEY,payload BLOB NOT NULL,created REAL NOT NULL);')
         os.chmod(REGISTRY,0o600)
         yield c
         c.commit()
@@ -143,7 +143,7 @@ def get_setting(key,default=None):
 def put_setting(key,value):
     with db() as c:c.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',(key,seal(value)))
 
-DEFAULT_PROFILE={'name':'','email':'','location':'','veteran':False,'disability':False,'needs_sponsorship':False,'felony':False,'us_citizen':False,'authorized_us':False}
+DEFAULT_PROFILE={'name':'','email':'','location':'','home_address':'','veteran':False,'disability':False,'needs_sponsorship':False,'felony':False,'us_citizen':False,'authorized_us':False}
 DEFAULT_SEARCH={'keywords':'IT support','location':'','workplace':'remote','auto_prepare':True,'followup_days':7,'scan_hours':12}
 
 def get_job(job_id):
@@ -151,13 +151,27 @@ def get_job(job_id):
     if not r:return None
     return {**json.loads(r['payload']),'firstSeen':r['first_seen'],'lastSeen':r['last_seen'],'active':bool(r['active'])}
 
-def upsert_jobs(source,jobs,snapshot=False):
+def upsert_jobs(source,jobs,snapshot=False,connection=None):
     now=time.time()
     auto=get_setting('search',DEFAULT_SEARCH).get('auto_prepare')
-    with db() as c:
+    with (db() if connection is None else nullcontext(connection)) as c:
         if snapshot:c.execute('UPDATE jobs SET active=0 WHERE source=?',(source,))
         for j in jobs:
             c.execute('INSERT INTO jobs VALUES(?,?,?,?,?,1) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,last_seen=excluded.last_seen,active=1',(j['id'],source,json.dumps(j),now,now))
             if auto and j.get('description') and j.get('verified',True):
                 c.execute("INSERT OR IGNORE INTO queue(job_id) VALUES(?)",(j['id'],))
     return len(jobs)
+
+
+def save_imported_job(source,job,notes=''):
+    # The listing and bookmark commit together; failure cannot leave a half-save.
+    with db() as c:
+        upsert_jobs(source,[job],connection=c)
+        old=c.execute('SELECT * FROM applications WHERE job_id=?',(job['id'],)).fetchone()
+        status=old['status'] if old and old['status'] not in ('new','hidden') else 'saved'
+        before=unseal(old['notes']) if old else ''
+        note=before if not notes.strip() or notes.strip()==before else (before+'\n\n'+notes.strip()).strip()
+        if len(note)>20000:raise ValueError('Combined notes exceed 20,000 characters. Edit the saved notes before importing again.')
+        c.execute("INSERT INTO applications VALUES(?,?,?,?,?,?) ON CONFLICT(job_id) DO UPDATE SET status=excluded.status,notes=excluded.notes,updated=excluded.updated",
+                  (job['id'],status,seal(note),None,None,time.time()))
+    return status

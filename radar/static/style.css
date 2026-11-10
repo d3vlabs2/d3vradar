@@ -31,3 +31,5 @@ footer .footer-credit{display:inline;font-size:9px;letter-spacing:0;line-height:
 .import-url-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,0.6fr);gap:20px;margin:16px 0}@media(max-width:700px){.import-url-row{grid-template-columns:1fr;gap:8px}}
 
 .map-panel{border:1px solid #d8e4df;background:#f7faf8;border-radius:10px;padding:20px;margin:18px 0}.map-panel label{margin:12px 0}.job-map-frame{width:100%;height:420px;border:0;border-radius:8px}.map-output{margin-top:12px}.job-actions .view-button{white-space:nowrap}
+
+.member-invite{display:flex;align-items:end;gap:16px;flex-wrap:wrap}.member-invite label{flex:1;min-width:220px}.member-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid #e1e8e6}.member-row strong{overflow-wrap:anywhere}.member-row p{margin:6px 0;color:#6e8580}.member-row button{flex-shrink:0}

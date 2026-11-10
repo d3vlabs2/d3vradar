@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {destinations,mapsUrl,embedUrl} from '../radar/static/maps.mjs';
+import {destinations,mapsUrl,embedUrl,homeOrigin} from '../radar/static/maps.mjs';
 assert.deepEqual(destinations({workplace:'remote',location:'United States'}),[]);
 assert.deepEqual(destinations({workplace:'remote',location:'Albany, NY'}),[]);
 assert.deepEqual(destinations({workplace:'unknown',location:'Remote, United States'}),[]);
@@ -14,4 +14,10 @@ assert.throws(()=>mapsUrl(' '));assert.equal(embedUrl('', 'Albany, NY'),'');
 const embed=new URL(embedUrl('browser-key','Buffalo, NY','12207','transit'));
 assert.equal(embed.pathname,'/maps/embed/v1/directions');assert.equal(embed.searchParams.get('units'),'imperial');assert.equal(embed.searchParams.get('mode'),'transit');
 assert.equal(new URL(embedUrl('browser-key','Albany, NY')).pathname,'/maps/embed/v1/place');
-console.log('18 Maps checks passed.');
+assert.equal(homeOrigin({home_address:'  123 Example St, Apt #2, Albany, NY 12207  ',location:'Buffalo, NY'}),'123 Example St, Apt #2, Albany, NY 12207');
+assert.equal(homeOrigin({home_address:' ',location:' Albany, NY '}),'Albany, NY');
+assert.equal(homeOrigin(), '');
+const homeRoute=new URL(mapsUrl('456 Example Road, Buffalo, NY',homeOrigin({home_address:'123 Example St, Apt #2, Albany, NY 12207'})));
+assert.equal(homeRoute.searchParams.get('origin'),'123 Example St, Apt #2, Albany, NY 12207');
+assert.equal(homeRoute.searchParams.get('destination'),'456 Example Road, Buffalo, NY');
+console.log('23 Maps checks passed.');

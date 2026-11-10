@@ -1,3 +1,4 @@
+export function homeOrigin(profile={}){return String(profile.home_address||'').trim()||String(profile.location||'').trim();}
 const vague=/^(remote|hybrid|on[ -]?site|worldwide|anywhere|global|united states(?: of america)?|usa?|u\.?s\.?a?\.?|canada|europe|emea|apac|americas|north america|united kingdom|uk|location not supplied|not supplied|unknown|multiple locations|various locations|texas)$/i;
 export function destinations(job){
  const explicit=String(job.officeAddress||'').trim();

@@ -4,7 +4,8 @@ from pathlib import Path
 from fastapi import FastAPI, Request, UploadFile, File, Form, HTTPException
 from fastapi.responses import FileResponse, Response, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, ConfigDict
+from . import members,store
 from . import sources
 from .apply import application_options
 from .importer import fetch_details
@@ -16,7 +17,7 @@ from .documents import extract,MAX_SIZE,docx_bytes,pdf_bytes
 from .drafts import prepare,prepare_followup,drain_queue,draft_due_followups
 
 async def maintain_workspaces():
-    allowed={'local'} if security.MODE=='local' else security.ALLOWED
+    allowed=security.allowed_emails()
     for email in workspace_emails(allowed):
         with workspace_context(email):
             try:
@@ -53,23 +54,30 @@ async def lifespan(app):
         try:await task
         except asyncio.CancelledError:pass
 
-app=FastAPI(title='D3V Job Radar',version='2.7.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
+app=FastAPI(title='D3V Job Radar',version='2.8.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
 app.middleware('http')(guard)
 @app.exception_handler(ValueError)
 async def value_error(request,exc):return JSONResponse({'detail':str(exc)},400)
 @app.get('/health')
-def health():return {'status':'ok','version':'2.7.0'}
+def health():return {'status':'ok','version':'2.8.0'}
 
 class Profile(BaseModel):
     name:str=Field(max_length=150);email:str=Field(default='',max_length=250);location:str=Field(default='',max_length=150)
     home_address:str=Field(default='',max_length=300)
     veteran:bool=False;disability:bool=False;needs_sponsorship:bool=False;felony:bool=False;us_citizen:bool=False;authorized_us:bool=False
+    @field_validator('home_address')
+    @classmethod
+    def trim_home_address(cls,value):return value.strip()
 class SearchProfile(BaseModel):
     keywords:str=Field(min_length=2,max_length=150);location:str=Field(max_length=150);workplace:str='remote';auto_prepare:bool=True;followup_days:int=Field(default=7,ge=1,le=90)
 class ImportedJob(BaseModel):
     title:str=Field(min_length=2,max_length=300);company:str=Field(min_length=1,max_length=250);location:str=Field(default='',max_length=250);url:str=Field(max_length=2000)
     officeAddress:str=Field(default='',max_length=300)
     description:str=Field(min_length=80,max_length=60000);source:str='manual';workplace:str='unknown';salary:str=Field(default='',max_length=200);applicants:int|None=Field(default=None,ge=0,le=10000000);applicantLabel:str=Field(default='Not supplied',max_length=200)
+class JobImport(ImportedJob):
+    save_to_saved:bool=True
+    notes:str=Field(default='',max_length=20000)
+
 class ApplicationUpdate(BaseModel):
     status:str;notes:str=Field(default='',max_length=20000);followup:float|None=None;applied:float|None=None
 class DraftUpdate(BaseModel):
@@ -85,7 +93,34 @@ def workspace(request:Request):
         documents=[{k:r[k] for k in ['id','kind','name','created','active']} for r in c.execute('SELECT * FROM documents ORDER BY created DESC')]
         drafts=[{k:r[k] for k in ['id','job_id','kind','created','approved']} for r in c.execute('SELECT id,job_id,kind,created,approved FROM drafts ORDER BY created DESC')]
         queue={r['status']:r['n'] for r in c.execute('SELECT status,COUNT(*) n FROM queue GROUP BY status')}
-    return {'identity':{'email':request.state.identity,'privateWorkspace':True,'mode':security.MODE},'jobs':jobs,'applications':applications,'documents':documents,'drafts':drafts,'sources':sources.source_status(),'profile':get_setting('profile',DEFAULT_PROFILE),'search':get_setting('search',DEFAULT_SEARCH),'scanRunning':sources.scan_running(),'queue':queue,'scheduler':os.getenv('RADAR_SCHEDULER','true')=='true','indexedSearch':bool(os.getenv('BRAVE_SEARCH_API_KEY')),'mapsEmbedKey':os.getenv('GOOGLE_MAPS_EMBED_API_KEY','').strip()}
+    return {'identity':{'email':request.state.identity,'privateWorkspace':True,'mode':security.MODE,'isOwner':security.MODE=='cloudflare' and request.state.identity==store.OWNER_EMAIL},'jobs':jobs,'applications':applications,'documents':documents,'drafts':drafts,'sources':sources.source_status(),'profile':get_setting('profile',DEFAULT_PROFILE),'search':get_setting('search',DEFAULT_SEARCH),'scanRunning':sources.scan_running(),'queue':queue,'scheduler':os.getenv('RADAR_SCHEDULER','true')=='true','indexedSearch':bool(os.getenv('BRAVE_SEARCH_API_KEY')),'mapsEmbedKey':os.getenv('GOOGLE_MAPS_EMBED_API_KEY','').strip()}
+
+def require_owner(request:Request):
+    if security.MODE!='cloudflare' or request.state.identity!=store.OWNER_EMAIL:
+        raise HTTPException(403,'Only the workspace owner can manage users.')
+
+class MemberInvite(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    email:str=Field(min_length=3,max_length=254)
+
+class MemberAccess(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    enabled:bool
+
+@app.get('/api/admin/users')
+def admin_users(request:Request):
+    require_owner(request)
+    return {'users':members.list_members(security.ALLOWED),'cloudflarePolicyManaged':False}
+
+@app.post('/api/admin/users')
+def admin_invite(request:Request,p:MemberInvite):
+    require_owner(request)
+    return {'user':members.add_member(p.email,security.ALLOWED),'cloudflarePolicyManaged':False}
+
+@app.put('/api/admin/users/{member_id}')
+def admin_access(request:Request,member_id:str,p:MemberAccess):
+    require_owner(request)
+    return {'user':members.set_enabled(member_id,p.enabled,security.ALLOWED)}
 
 @app.put('/api/profile')
 def profile_save(p:Profile):
@@ -158,13 +193,16 @@ def original_download(id:str):
     return Response(base64.b64decode(payload['original']),media_type='application/octet-stream',headers={'Content-Disposition':"attachment; filename*=UTF-8''"+quote(r['name'],safe='')})
 
 @app.post('/api/jobs')
-def import_job(p:ImportedJob):
+def import_job(p:JobImport):
     if p.workplace not in ('unknown','remote','hybrid','onsite'):raise ValueError('Unknown workplace')
     known={b['id'] for b in sources.BOARDS}|{'manual'}
     if p.source not in known:raise ValueError('Unknown source')
-    value=p.model_dump();source=value.pop('source');j=sources.job(source,**value)
+    value=p.model_dump(exclude={'save_to_saved','notes'});source=value.pop('source');j=sources.job(source,**value)
     if j is None:raise ValueError('A valid HTTPS job URL is required')
-    upsert_jobs(source,[j]);return {'job':j}
+    if p.save_to_saved:
+        status=store.save_imported_job(source,j,p.notes)
+        return {'job':j,'savedTo':'applications' if status in ('applied','interviewing','rejected','offer','withdrawn') else 'saved'}
+    upsert_jobs(source,[j]);return {'job':j,'savedTo':None}
 @app.put('/api/jobs/{job_id}')
 def update_job(job_id:str,p:ImportedJob):
     current=get_job(job_id)

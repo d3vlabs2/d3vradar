@@ -4,6 +4,7 @@ import jwt
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from .store import workspace_context,ensure_workspace
+from .members import permitted,allowed_emails as member_emails
 
 MODE=os.getenv('RADAR_AUTH_MODE','cloudflare')
 ORIGIN=os.getenv('RADAR_ORIGIN','https://radar.example.com').rstrip('/')
@@ -34,7 +35,7 @@ def authenticate(request:Request):
         email=claims.get('email')
         if not isinstance(email,str) or not re.fullmatch(r'[^\s@]+@[^\s@]+',email):return None
         email=email.lower()
-        return email if email in ALLOWED else None
+        return email if permitted(email,ALLOWED) else None
     except (jwt.PyJWTError,ValueError,OSError):return False
 
 async def guard(request,call_next):
@@ -57,3 +58,7 @@ async def guard(request,call_next):
     response.headers['Content-Security-Policy']="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src https://www.google.com/maps/embed/ https://job-boards.greenhouse.io https://jobs.ashbyhq.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
     if request.url.path.startswith('/api/'):response.headers['Cache-Control']='no-store'
     return response
+
+
+def allowed_emails():
+    return {'local'} if MODE=='local' else member_emails(ALLOWED)

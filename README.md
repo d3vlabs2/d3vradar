@@ -7,7 +7,9 @@ uploads, job-specific draft preparation, application history, follow-up drafts,
 and dashboard statistics. Manual imports fetch job details where the source permits.
 A Chrome extension helps fill recognized application questions with reviewed profile answers.
 
-Version **2.7.0** adds private beta workspaces per approved login. Read
+Version **2.8.0** adds an owner-only Users screen and clearer saved home-address
+controls for commute directions. Importing now uses one dialog with a **Save to
+Saved jobs** button and optional notes. Private beta workspaces remain isolated per login. Read
 [BETA.md](BETA.md) before inviting friends; the existing workspace stays assigned
 to its configured owner. Shared public-feed caching keeps personal records separate.
 
