@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {localDateKey,timestampDateKey,defaultAppliedDate,buildTrendStats} from '../radar/static/stats.mjs';
+import {localDateKey,timestampDateKey,defaultAppliedDate,buildTrendStats,appliedDateInput,submittedAppliedDate} from '../radar/static/stats.mjs';
 const now=new Date(2026,10,9,23,59),today=localDateKey(now),epoch=now.getTime()/1000;
 assert.equal(today,'2026-11-09');
 assert.equal(defaultAppliedDate('applied','',null,now),today);
@@ -22,4 +22,10 @@ assert.equal(result.buckets.at(-1).listings,1);
 assert.equal(buildTrendStats([],[],30,now).buckets.length,30);
 assert.equal(buildTrendStats([],[],30,now).listings,0);
 assert.equal(new Set(result.buckets.map(x=>x.key)).size,14);
-console.log('19 date/statistics checks passed.');
+assert.equal(appliedDateInput(null,now),today);
+assert.equal(appliedDateInput(twoDays,now),'2026-11-07');
+assert.equal(submittedAppliedDate('saved',today,null),'');
+assert.equal(submittedAppliedDate('new',today,null),'');
+assert.equal(submittedAppliedDate('applied','2026-10-20',null),'2026-10-20');
+assert.equal(submittedAppliedDate('saved','2026-10-20',twoDays),'2026-10-20');
+console.log('25 date/statistics checks passed.');

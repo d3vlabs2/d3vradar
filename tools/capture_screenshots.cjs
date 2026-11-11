@@ -46,6 +46,18 @@ const fs=require('node:fs');
  await page.getByRole('button',{name:'Imported Demo Support',exact:true}).click();
  await page.locator('[role="dialog"] #application-form').waitFor();
  if(await page.getByPlaceholder('Recruiter, interview details, next steps…',{exact:true}).inputValue()!=='Demo note: review this role later.')throw Error('Imported notes did not persist');
+ const today=await page.evaluate(()=>{const now=new Date();return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;});
+ if(await page.locator('#applied-date').inputValue()!==today)throw Error('Applied date was not prefilled with today');
+ await page.getByText('Change this date if you applied on a different day.',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Save application',exact:true}).click();
+ await page.getByText('Application saved.',{exact:true}).waitFor();
+ if(await page.locator('.stats > div').nth(1).locator('strong').innerText()!=='02')throw Error('Bookmark was incorrectly counted as an application');
+ await page.locator('#applied-date').fill('2026-10-20');
+ await page.locator('#application-status').selectOption('applied');
+ await page.getByRole('button',{name:'Save application',exact:true}).click();
+ await page.getByText('Application saved.',{exact:true}).waitFor();
+ if(await page.locator('#applied-date').inputValue()!=='2026-10-20')throw Error('Edited application date was overwritten');
+
  await page.keyboard.press('Escape');
  await page.locator('[data-tab="0"]').click();
  await page.screenshot({path:'docs/screenshots/discover.png',fullPage:true});

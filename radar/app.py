@@ -54,12 +54,12 @@ async def lifespan(app):
         try:await task
         except asyncio.CancelledError:pass
 
-app=FastAPI(title='D3V Job Radar',version='2.8.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
+app=FastAPI(title='D3V Job Radar',version='2.8.1',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
 app.middleware('http')(guard)
 @app.exception_handler(ValueError)
 async def value_error(request,exc):return JSONResponse({'detail':str(exc)},400)
 @app.get('/health')
-def health():return {'status':'ok','version':'2.8.0'}
+def health():return {'status':'ok','version':'2.8.1'}
 
 class Profile(BaseModel):
     name:str=Field(max_length=150);email:str=Field(default='',max_length=250);location:str=Field(default='',max_length=150)
