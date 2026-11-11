@@ -6,8 +6,42 @@ const fs=require('node:fs');
  const browser=await chromium.launch({headless:true});
  const page=await browser.newPage({viewport:{width:1440,height:1200},deviceScaleFactor:1});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{
+  const interval=window.setInterval;
+  window.setInterval=(callback,delay,...args)=>{
+   if(delay===10000){window.refreshFixture=callback;return 0;}
+   return interval(callback,delay,...args);
+  };
+ });
  await page.goto('http://127.0.0.1:5173');
  await page.locator('.job-card').first().waitFor();await page.evaluate(()=>document.fonts.ready);
+ // Finish a background request after a filter has received focus.
+ await page.evaluate(()=>{
+  const fetchFixture=window.fetch;
+  window.workplaceControl=document.querySelector('#work');
+  window.fetch=async (...args)=>{
+   await new Promise(resolve=>{window.finishRefresh=resolve;});
+   return fetchFixture(...args);
+  };
+  window.refreshFixture();
+  window.fetch=fetchFixture;
+ });
+ await page.locator('#work').click();
+ await page.keyboard.press('Escape');
+ await page.locator('#work').focus();
+ await page.evaluate(async ()=>{
+  window.finishRefresh();
+  await new Promise(resolve=>requestAnimationFrame(resolve));
+  if(document.querySelector('#work')!==window.workplaceControl)throw Error('Background refresh replaced an active filter');
+ });
+ await page.locator('#work').selectOption('hybrid');
+ await page.locator('#sort').selectOption('newest');
+ if(await page.locator('#job-locations option[value="Albany, NY"]').count()!==1)throw Error('Missing location suggestion');
+ await page.locator('#where').fill('Albany');
+ await page.getByRole('button',{name:'Search jobs',exact:true}).click();
+ await page.getByText(/Search complete · 1 matches/).waitFor();
+ if(await page.locator('.job-card').count()!==1||!await page.getByRole('button',{name:'Systems Administrator',exact:true}).isVisible())throw Error('Filters did not select the expected job');
+ await page.getByRole('button',{name:'Reset filters',exact:true}).click();
  // Beta UI regression checks: identity, sign-out, and private search settings.
  if(!(await page.locator('.private').innerText()).includes('demo@example.test'))throw Error('Missing verified identity display');
  await page.getByRole('link',{name:'Sign out',exact:true}).waitFor();

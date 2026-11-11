@@ -10,7 +10,7 @@ state=dict(identity=dict(email='demo@example.test',privateWorkspace=True,mode='c
 js=(r/'radar/static/app.js').read_text()
 for name in ['maps','stats']:
  uri='data:text/javascript;base64,'+base64.b64encode((r/f'radar/static/{name}.mjs').read_bytes()).decode()
- js=js.replace('./'+name+'.mjs?v=2.8.1',uri)
+ js=js.replace('./'+name+'.mjs?v=2.8.2',uri)
 js=js.replace("sessionStorage.getItem('radar-dev-token')","''")
 setup='const DEMO='+json.dumps(state)+r""";
 if(new URLSearchParams(location.search).has('guest')){DEMO.identity.isOwner=false;DEMO.identity.email='guest@example.test';}
