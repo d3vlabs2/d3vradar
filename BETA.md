@@ -157,3 +157,10 @@ together and returns to Saved jobs without opening another dialog. Saving is not
 applying. Open the saved role later to prepare documents or mark it applied. If
 the same job already has an application, importing it again preserves its status,
 applied/follow-up dates, and notes and returns to Applications instead.
+
+### Applied date default (2.8.1)
+
+Opening a role fills Applied date with today's local calendar date when no applied
+date has been recorded. Existing dates and your edits are preserved. The helper
+text says “Change this date if you applied on a different day.” Saving a role with
+New, Saved, or Hidden status does not record that suggested date as an application.

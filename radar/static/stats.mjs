@@ -32,3 +32,10 @@ export function buildTrendStats(jobs=[],applications=[],days=14,now=new Date()) 
   }
   return {buckets,days:span,undatedApplications,listings:buckets.reduce((s,b)=>s+b.listings,0),applications:buckets.reduce((s,b)=>s+b.applications,0)};
 }
+
+export function appliedDateInput(existingApplied=null,now=new Date()) {
+  return timestampDateKey(existingApplied)||localDateKey(now);
+}
+export function submittedAppliedDate(status,value,existingApplied=null) {
+  return existingApplied||['applied','interviewing','rejected','offer','withdrawn'].includes(status)?value:'';
+}

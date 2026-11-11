@@ -10,7 +10,7 @@ state=dict(identity=dict(email='demo@example.test',privateWorkspace=True,mode='c
 js=(r/'radar/static/app.js').read_text()
 for name in ['maps','stats']:
  uri='data:text/javascript;base64,'+base64.b64encode((r/f'radar/static/{name}.mjs').read_bytes()).decode()
- js=js.replace('./'+name+'.mjs?v=2.8.0',uri)
+ js=js.replace('./'+name+'.mjs?v=2.8.1',uri)
 js=js.replace("sessionStorage.getItem('radar-dev-token')","''")
 setup='const DEMO='+json.dumps(state)+r""";
 if(new URLSearchParams(location.search).has('guest')){DEMO.identity.isOwner=false;DEMO.identity.email='guest@example.test';}
@@ -21,6 +21,9 @@ window.fetch=async(url,options={})=>{
  else if(path.endsWith('/import/fetch'))result={...DEMO.jobs[0],title:'Imported Demo Support',company:'Example Import Demo',method:'Demo public extraction'};
  else if(path.endsWith('/jobs')&&method==='POST'){
   const input=JSON.parse(options.body),job={...input,id:'demo-import-'+DEMO.jobs.length,active:true,verified:true,firstSeen:Date.now()/1000};DEMO.jobs.push(job);DEMO.applications.push({job_id:job.id,status:'saved',notes:input.notes||'',applied:null,followup:null});result={job,savedTo:'saved'};
+ }
+ else if(path.includes('/applications/')&&method==='PUT'){
+  const row=DEMO.applications.find(row=>path.endsWith('/'+row.job_id));Object.assign(row,JSON.parse(options.body));result={ok:true};
  }
  else if(path.endsWith('/profile')&&method==='PUT'){DEMO.profile=JSON.parse(options.body);result={ok:true};}
  else if(path.endsWith('/admin/users')&&method==='GET')result={users:DEMO_USERS,cloudflarePolicyManaged:false};
