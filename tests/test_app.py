@@ -228,3 +228,26 @@ def test_apply_defaults_now_but_can_edit_date(client):
     chosen=before-3*86400
     changed=client.put('/api/applications/'+j['id'],json={'status':'applied','applied':chosen}).json()
     assert changed['applied']==chosen
+
+
+@pytest.mark.anyio
+async def test_reyrey_indexed_search_keeps_only_job_details(monkeypatch):
+    import httpx
+    monkeypatch.setenv('BRAVE_SEARCH_API_KEY','fixture-key')
+    board=next(b for b in sources.BOARDS if b['id']=='reyrey')
+    listing=board['url']+'/12345'
+
+    def handler(request):
+        assert 'site:reyrey.com/company/careers/job-openings/' in request.url.params['q']
+        return httpx.Response(200,json={'web':{'results':[
+            {'title':'Example technician','url':listing},
+            {'title':'Openings directory','url':board['url']},
+            {'title':'Careers','url':'https://www.reyrey.com/company/careers'},
+            {'title':'Lookalike','url':'https://reyrey.com.example.com/company/careers/job-openings/12345'},
+        ]}})
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        jobs=await sources.indexed_search(client,board,DEFAULT_SEARCH)
+    assert [job['url'] for job in jobs]==[listing]
+    assert jobs[0]['company']=='Reynolds and Reynolds'
+    assert jobs[0]['verified'] is False
