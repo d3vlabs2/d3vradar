@@ -22,6 +22,10 @@ BOARDS=[
  {'id':'greenhouse','name':'Greenhouse discovery','url':'https://www.greenhouse.com/for-job-seekers','mode':'indexed','domain':'job-boards.greenhouse.io','domains':['job-boards.greenhouse.io','boards.greenhouse.io'],'about':'Search public employer job boards. This does not access a private MyGreenhouse account or its recommendations.'},
  {'id':'ashby','name':'Ashby careers','url':'https://www.ashbyhq.com/careers','mode':'ashby','board':'Ashby','about':'Ashby’s own company openings, not every employer using Ashby.'},
  {'id':'jobleads','name':'JobLeads','url':'https://www.jobleads.com/home','mode':'indexed','domain':'jobleads.com','about':'Search links, job import, and optional indexed discovery. Some listings require a JobLeads account.'},
+ {'id':'reyrey','name':'Reynolds and Reynolds','url':'https://www.reyrey.com/company/careers/job-openings',
+  'mode':'indexed','kind':'Company careers','domain':'reyrey.com/company/careers/job-openings/',
+  'job_path_pattern':r'/company/careers/job-openings/[0-9]+/?','company':'Reynolds and Reynolds',
+  'about':'Official openings and manual import. Enable Brave Search for indexed discovery.'},
  {'id':'jobilize','name':'Jobilize','url':'https://www.jobilize.com/','mode':'indexed','domain':'jobilize.com','about':'Search links, job import, and optional indexed discovery.'},
 ]
 
@@ -119,9 +123,12 @@ async def indexed_search(client,board,search):
     r.raise_for_status();rows=r.json().get('web',{}).get('results',[]);out=[]
     domains=[d.split('/')[0] for d in board.get('domains',[board['domain']])]
     for row in rows:
-        host=(urlparse(row.get('url','')).hostname or '').lower()
+        parsed=urlparse(row.get('url',''))
+        host=(parsed.hostname or '').lower()
         if not any(host==d or host.endswith('.'+d) for d in domains):continue
-        j=job(board['id'],row.get('title'),'Company not supplied','Location not supplied',row['url'],row.get('description',''),verified=False,importMode='Indexed result — paste full job description before tailoring')
+        pattern=board.get('job_path_pattern')
+        if pattern and not re.fullmatch(pattern,parsed.path):continue
+        j=job(board['id'],row.get('title'),board.get('company','Company not supplied'),'Location not supplied',row['url'],row.get('description',''),verified=False,importMode='Indexed result — paste full job description before tailoring')
         if j:out.append(j)
     return out
 

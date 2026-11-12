@@ -25,6 +25,7 @@ AUDIT = {
  'glassdoor': ('unverified', 'No public candidate submission or embed integration verified. Apply on the provider or employer site.', 'https://www.glassdoor.com/blog/guide/how-to-apply-for-a-job/'),
  'teal': ('unverified', 'Job discovery and tracking do not provide a verified public submission integration.', 'https://help.tealhq.com/en/articles/13456939-using-teal-s-job-search'),
  'jobleads': ('external', 'JobLeads redirects to the original posting for applications.', 'https://support.jobleads.com/hc/en-us/articles/12298304413842-Can-I-apply-directly-from-JobLeads'),
+ 'reyrey': ('external', 'Apply through the official Reynolds and Reynolds posting.', 'https://www.reyrey.com/company/careers/how-to-apply'),
  'jobilize': ('unverified', 'Employer application routes vary; no public submission or embed integration verified.', 'https://www.jobilize.com/'),
 }
 # Full photo catalog is covered explicitly. Unverified is not advertised as supported.
