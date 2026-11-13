@@ -127,6 +127,8 @@ CREATE TABLE IF NOT EXISTS documents(id TEXT PRIMARY KEY,kind TEXT NOT NULL,name
 CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY,source TEXT NOT NULL,payload TEXT NOT NULL,first_seen REAL NOT NULL,last_seen REAL NOT NULL,active INTEGER NOT NULL DEFAULT 1);
 CREATE INDEX IF NOT EXISTS jobs_source ON jobs(source);
 CREATE TABLE IF NOT EXISTS applications(job_id TEXT PRIMARY KEY REFERENCES jobs(id),status TEXT NOT NULL,notes BLOB NOT NULL,applied REAL,followup REAL,updated REAL NOT NULL);
+CREATE TABLE IF NOT EXISTS tailored_resumes(document_id TEXT PRIMARY KEY REFERENCES documents(id),job_id TEXT NOT NULL REFERENCES jobs(id));
+CREATE TABLE IF NOT EXISTS application_resumes(job_id TEXT PRIMARY KEY REFERENCES jobs(id),document_id TEXT NOT NULL REFERENCES documents(id));
 CREATE TABLE IF NOT EXISTS drafts(id TEXT PRIMARY KEY,job_id TEXT NOT NULL REFERENCES jobs(id),kind TEXT NOT NULL,payload BLOB NOT NULL,created REAL NOT NULL,approved INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS source_runs(id TEXT PRIMARY KEY,checked REAL NOT NULL DEFAULT 0,success REAL NOT NULL DEFAULT 0,count INTEGER NOT NULL DEFAULT 0,error TEXT NOT NULL DEFAULT '',lease REAL NOT NULL DEFAULT 0,fingerprint TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS queue(job_id TEXT PRIMARY KEY REFERENCES jobs(id),status TEXT NOT NULL DEFAULT 'pending',error TEXT NOT NULL DEFAULT '');
@@ -163,9 +165,9 @@ def upsert_jobs(source,jobs,snapshot=False,connection=None):
     return len(jobs)
 
 
-def save_imported_job(source,job,notes=''):
+def save_imported_job(source,job,notes='',connection=None):
     # The listing and bookmark commit together; failure cannot leave a half-save.
-    with db() as c:
+    with (db() if connection is None else nullcontext(connection)) as c:
         upsert_jobs(source,[job],connection=c)
         old=c.execute('SELECT * FROM applications WHERE job_id=?',(job['id'],)).fetchone()
         status=old['status'] if old and old['status'] not in ('new','hidden') else 'saved'
