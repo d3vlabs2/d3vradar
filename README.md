@@ -17,6 +17,19 @@ Google Maps links and directions for job locations, optional
 embedded maps, and an encrypted home-address setting are included. See [MAPS.md](MAPS.md).
 Exact travel distance is shown by Google Maps; Radar does not invent distances.
 
+## Tailor and reuse a resume
+
+Upload a base resume in **Documents**. Open a job, or paste a posting URL under
+**Import job** and fetch its details. Expand **Tailor a resume for this job**,
+choose a base resume, then generate and edit the draft. Saving creates a separate
+single-column DOCX in **Documents** and selects it for that job. The base file
+stays available for other jobs.
+
+Under **Resume for this application**, you can change the selection or download
+the selected version to upload to the employer's form. Radar uses the job
+description to highlight supported skills and rank existing bullets. Review the
+draft and any keyword gaps before submitting. ATS results vary by employer.
+
 ## Screenshots
 
 Captured from Radar 2.6 with fictional demo jobs and application records.

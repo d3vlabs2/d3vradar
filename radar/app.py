@@ -1,4 +1,4 @@
-import asyncio, base64, hashlib, io, json, os, time, uuid
+import asyncio, base64, hashlib, io, json, os, re, time, uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI, Request, UploadFile, File, Form, HTTPException
@@ -13,7 +13,7 @@ from .store import db,init,seal,unseal,get_setting,put_setting,get_job,upsert_jo
 from .security import guard,validate_config
 from . import security
 from .store import configure_workspaces,workspace_context,ensure_workspace,workspace_emails
-from .documents import extract,MAX_SIZE,docx_bytes,pdf_bytes
+from .documents import extract,MAX_SIZE,docx_bytes,pdf_bytes,prepare_resume
 from .drafts import prepare,prepare_followup,drain_queue,draft_due_followups
 
 async def maintain_workspaces():
@@ -54,12 +54,12 @@ async def lifespan(app):
         try:await task
         except asyncio.CancelledError:pass
 
-app=FastAPI(title='D3V Job Radar',version='2.8.4',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
+app=FastAPI(title='D3V Job Radar',version='2.9.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
 app.middleware('http')(guard)
 @app.exception_handler(ValueError)
 async def value_error(request,exc):return JSONResponse({'detail':str(exc)},400)
 @app.get('/health')
-def health():return {'status':'ok','version':'2.8.4'}
+def health():return {'status':'ok','version':'2.9.0'}
 
 class Profile(BaseModel):
     name:str=Field(max_length=150);email:str=Field(default='',max_length=250);location:str=Field(default='',max_length=150)
@@ -74,7 +74,11 @@ class ImportedJob(BaseModel):
     title:str=Field(min_length=2,max_length=300);company:str=Field(min_length=1,max_length=250);location:str=Field(default='',max_length=250);url:str=Field(max_length=2000)
     officeAddress:str=Field(default='',max_length=300)
     description:str=Field(min_length=80,max_length=60000);source:str='manual';workplace:str='unknown';salary:str=Field(default='',max_length=200);applicants:int|None=Field(default=None,ge=0,le=10000000);applicantLabel:str=Field(default='Not supplied',max_length=200)
+class TextUpdate(BaseModel):
+    text:str=Field(min_length=30,max_length=150000)
+
 class JobImport(ImportedJob):
+    tailored_resume:TextUpdate|None=None
     save_to_saved:bool=True
     notes:str=Field(default='',max_length=20000)
 
@@ -82,18 +86,16 @@ class ApplicationUpdate(BaseModel):
     status:str;notes:str=Field(default='',max_length=20000);followup:float|None=None;applied:float|None=None
 class DraftUpdate(BaseModel):
     text:str=Field(min_length=30,max_length=150000);reviewed:bool=False
-class TextUpdate(BaseModel):
-    text:str=Field(min_length=30,max_length=150000)
-
 @app.get('/api/workspace')
 def workspace(request:Request):
     with db() as c:
         jobs=[{**json.loads(r['payload']),'active':bool(r['active']) and not (json.loads(r['payload']).get('expires') and float(json.loads(r['payload'])['expires'])<time.time()),'firstSeen':r['first_seen']} for r in c.execute('SELECT * FROM jobs ORDER BY first_seen DESC LIMIT 3000')]
         applications=[{**{k:r[k] for k in ['job_id','status','applied','followup','updated']},'notes':unseal(r['notes'])} for r in c.execute('SELECT * FROM applications')]
-        documents=[{k:r[k] for k in ['id','kind','name','created','active']} for r in c.execute('SELECT * FROM documents ORDER BY created DESC')]
+        documents=[{k:r[k] for k in ['id','kind','name','created','active','job_id']} for r in c.execute('SELECT d.id,d.kind,d.name,d.created,d.active,t.job_id FROM documents d LEFT JOIN tailored_resumes t ON t.document_id=d.id ORDER BY d.created DESC')]
+        resume_selections={r['job_id']:r['document_id'] for r in c.execute('SELECT * FROM application_resumes')}
         drafts=[{k:r[k] for k in ['id','job_id','kind','created','approved']} for r in c.execute('SELECT id,job_id,kind,created,approved FROM drafts ORDER BY created DESC')]
         queue={r['status']:r['n'] for r in c.execute('SELECT status,COUNT(*) n FROM queue GROUP BY status')}
-    return {'identity':{'email':request.state.identity,'privateWorkspace':True,'mode':security.MODE,'isOwner':security.MODE=='cloudflare' and request.state.identity==store.OWNER_EMAIL},'jobs':jobs,'applications':applications,'documents':documents,'drafts':drafts,'sources':sources.source_status(),'profile':get_setting('profile',DEFAULT_PROFILE),'search':get_setting('search',DEFAULT_SEARCH),'scanRunning':sources.scan_running(),'queue':queue,'scheduler':os.getenv('RADAR_SCHEDULER','true')=='true','indexedSearch':bool(os.getenv('BRAVE_SEARCH_API_KEY')),'mapsEmbedKey':os.getenv('GOOGLE_MAPS_EMBED_API_KEY','').strip()}
+    return {'identity':{'email':request.state.identity,'privateWorkspace':True,'mode':security.MODE,'isOwner':security.MODE=='cloudflare' and request.state.identity==store.OWNER_EMAIL},'jobs':jobs,'applications':applications,'documents':documents,'resumeSelections':resume_selections,'drafts':drafts,'sources':sources.source_status(),'profile':get_setting('profile',DEFAULT_PROFILE),'search':get_setting('search',DEFAULT_SEARCH),'scanRunning':sources.scan_running(),'queue':queue,'scheduler':os.getenv('RADAR_SCHEDULER','true')=='true','indexedSearch':bool(os.getenv('BRAVE_SEARCH_API_KEY')),'mapsEmbedKey':os.getenv('GOOGLE_MAPS_EMBED_API_KEY','').strip()}
 
 def require_owner(request:Request):
     if security.MODE!='cloudflare' or request.state.identity!=store.OWNER_EMAIL:
@@ -171,6 +173,8 @@ def document_text(id:str,p:TextUpdate):
     with db() as c:
         r=c.execute('SELECT * FROM documents WHERE id=?',(id,)).fetchone()
         if not r:raise HTTPException(404,'Document not found')
+        if c.execute('SELECT 1 FROM tailored_resumes WHERE document_id=?',(id,)).fetchone():
+            raise ValueError('Saved tailored resumes are fixed versions. Generate and save a new version to make changes.')
         value=unseal(r['payload']);value['text']=p.text
         c.execute('UPDATE documents SET payload=? WHERE id=?',(seal(value),id))
         c.execute("UPDATE queue SET status='pending',error='' WHERE status IN ('done','error')")
@@ -180,6 +184,8 @@ def activate_document(id:str):
     with db() as c:
         r=c.execute('SELECT kind FROM documents WHERE id=?',(id,)).fetchone()
         if not r:raise HTTPException(404,'Document not found')
+        if c.execute('SELECT 1 FROM tailored_resumes WHERE document_id=?',(id,)).fetchone():
+            raise ValueError('Choose a base document to activate.')
         c.execute('UPDATE documents SET active=0 WHERE kind=?',(r['kind'],));c.execute('UPDATE documents SET active=1 WHERE id=?',(id,))
         c.execute("UPDATE queue SET status='pending',error='' WHERE status IN ('done','error')")
     return {'ok':True}
@@ -192,16 +198,96 @@ def original_download(id:str):
     from urllib.parse import quote
     return Response(base64.b64decode(payload['original']),media_type='application/octet-stream',headers={'Content-Disposition':"attachment; filename*=UTF-8''"+quote(r['name'],safe='')})
 
+
+class ResumeSource(BaseModel):
+    document_id:str=Field(min_length=1,max_length=64)
+
+class ImportResumePreview(ResumeSource):
+    title:str=Field(min_length=2,max_length=300)
+    company:str=Field(min_length=1,max_length=250)
+    description:str=Field(min_length=80,max_length=60000)
+
+class ResumeSelection(BaseModel):
+    document_id:str|None=Field(default=None,max_length=64)
+
+def resume_preview(document_id,job):
+    if not job.get('verified',True) or len(job.get('description','').strip())<80:
+        raise ValueError('Add the full job description before tailoring a resume.')
+    with db() as c:
+        row=c.execute(
+            "SELECT payload FROM documents WHERE id=? AND kind='resume' "
+            "AND id NOT IN (SELECT document_id FROM tailored_resumes)",(document_id,)
+        ).fetchone()
+    if not row:
+        raise HTTPException(404,'Base resume not found')
+    text,report=prepare_resume(unseal(row['payload'])['text'],job)
+    return {'text':text,'report':report}
+
+def build_resume_document(job,text):
+    text=text.strip()
+    if len(text)<30 or re.search(r'[\x00-\x08\x0b\x0c\x0e-\x1f]',text):
+        raise ValueError('Enter at least 30 characters of readable resume text.')
+    name=re.sub(r'[^\w-]+','-',f"{job['company']} {job['title']}").strip('-')[:125] or 'Tailored'
+    id=uuid.uuid4().hex
+    data=docx_bytes(text)
+    payload={'id':id,'text':text,'original':base64.b64encode(data).decode(),'sha256':hashlib.sha256(data).hexdigest()}
+    return id,f'{name}-Resume-{id[:8]}.docx',seal(payload)
+
+def save_resume_document(c,job_id,resume):
+    id,name,payload=resume
+    c.execute("INSERT INTO documents VALUES(?,'resume',?,?,?,0)",(id,name,payload,time.time()))
+    c.execute('INSERT INTO tailored_resumes VALUES(?,?)',(id,job_id))
+    select_application_resume(c,job_id,id)
+
+def select_application_resume(c,job_id,document_id):
+    if document_id is None:
+        c.execute('DELETE FROM application_resumes WHERE job_id=?',(job_id,))
+    else:
+        if not c.execute("SELECT 1 FROM documents WHERE id=? AND kind='resume'",(document_id,)).fetchone():
+            raise HTTPException(404,'Resume not found')
+        c.execute('INSERT INTO application_resumes VALUES(?,?) ON CONFLICT(job_id) DO UPDATE SET document_id=excluded.document_id',
+                  (job_id,document_id))
+
+@app.post('/api/import/resume-preview')
+def preview_import_resume(p:ImportResumePreview):
+    return resume_preview(p.document_id,p.model_dump())
+
+@app.post('/api/jobs/{job_id}/resume-preview')
+def preview_job_resume(job_id:str,p:ResumeSource):
+    job=get_job(job_id)
+    if not job:raise HTTPException(404,'Job not found')
+    return resume_preview(p.document_id,job)
+
+@app.post('/api/jobs/{job_id}/resumes')
+def save_job_resume(job_id:str,p:TextUpdate):
+    job=get_job(job_id)
+    if not job:raise HTTPException(404,'Job not found')
+    resume=build_resume_document(job,p.text)
+    with db() as c:
+        save_resume_document(c,job_id,resume)
+    return {'id':resume[0],'name':resume[1]}
+
+@app.put('/api/jobs/{job_id}/resume-selection')
+def update_resume_selection(job_id:str,p:ResumeSelection):
+    if not get_job(job_id):raise HTTPException(404,'Job not found')
+    with db() as c:
+        select_application_resume(c,job_id,p.document_id)
+    return {'document_id':p.document_id}
+
 @app.post('/api/jobs')
 def import_job(p:JobImport):
     if p.workplace not in ('unknown','remote','hybrid','onsite'):raise ValueError('Unknown workplace')
     known={b['id'] for b in sources.BOARDS}|{'manual'}
     if p.source not in known:raise ValueError('Unknown source')
-    value=p.model_dump(exclude={'save_to_saved','notes'});source=value.pop('source');j=sources.job(source,**value)
+    value=p.model_dump(exclude={'save_to_saved','notes','tailored_resume'});source=value.pop('source');j=sources.job(source,**value)
     if j is None:raise ValueError('A valid HTTPS job URL is required')
-    if p.save_to_saved:
-        status=store.save_imported_job(source,j,p.notes)
-        return {'job':j,'savedTo':'applications' if status in ('applied','interviewing','rejected','offer','withdrawn') else 'saved'}
+    if p.save_to_saved or p.tailored_resume:
+        resume = build_resume_document(j,p.tailored_resume.text) if p.tailored_resume else None
+        with db() as c:
+            status=store.save_imported_job(source,j,p.notes,connection=c)
+            if resume:
+                save_resume_document(c,j['id'],resume)
+        return {'job':j,'resumeId':resume[0] if resume else None,'savedTo':'applications' if status in ('applied','interviewing','rejected','offer','withdrawn') else 'saved'}
     upsert_jobs(source,[j]);return {'job':j,'savedTo':None}
 @app.put('/api/jobs/{job_id}')
 def update_job(job_id:str,p:ImportedJob):
