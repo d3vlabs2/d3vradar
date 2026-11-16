@@ -46,3 +46,23 @@ def test_imported_bookmarks_remain_private(tenants):
     assert result['savedTo']=='saved'
     friend=c.get('/api/workspace',headers=h(FRIEND)).json()
     assert friend['jobs']==friend['applications']==[]
+
+
+def test_manual_import_allows_blank_fields_and_keeps_distinct_ids():
+    with TestClient(app, headers=HEADERS) as client:
+        first = client.post('/api/jobs', json={'notes': 'Follow up next week.'})
+        second = client.post('/api/jobs', json={'description': 'Short description'})
+        assert first.status_code == second.status_code == 200
+        first_job = first.json()['job']
+        second_job = second.json()['job']
+        assert first.json()['savedTo'] == 'saved'
+        assert first_job['title'] == 'Untitled job'
+        assert first_job['url'] == second_job['url'] == ''
+        assert first_job['id'] != second_job['id']
+        assert second_job['description'] == 'Short description'
+
+        path = '/api/jobs/' + first_job['id']
+        assert client.put(path, json={'url': 'https://example.test/manual-job'}).status_code == 200
+        assert client.put(path, json={'title': 'Updated manual job'}).status_code == 200
+        assert client.get(path + '/apply-options').status_code == 400
+        assert client.post('/api/jobs', json={'url': 'http://example.test/job'}).status_code == 400

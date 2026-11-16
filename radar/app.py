@@ -71,9 +71,9 @@ class Profile(BaseModel):
 class SearchProfile(BaseModel):
     keywords:str=Field(min_length=2,max_length=150);location:str=Field(max_length=150);workplace:str='remote';auto_prepare:bool=True;followup_days:int=Field(default=7,ge=1,le=90)
 class ImportedJob(BaseModel):
-    title:str=Field(min_length=2,max_length=300);company:str=Field(min_length=1,max_length=250);location:str=Field(default='',max_length=250);url:str=Field(max_length=2000)
+    title:str=Field(default='',max_length=300);company:str=Field(default='',max_length=250);location:str=Field(default='',max_length=250);url:str=Field(default='',max_length=2000)
     officeAddress:str=Field(default='',max_length=300)
-    description:str=Field(min_length=80,max_length=60000);source:str='manual';workplace:str='unknown';salary:str=Field(default='',max_length=200);applicants:int|None=Field(default=None,ge=0,le=10000000);applicantLabel:str=Field(default='Not supplied',max_length=200)
+    description:str=Field(default='',max_length=60000);source:str='manual';workplace:str='unknown';salary:str=Field(default='',max_length=200);applicants:int|None=Field(default=None,ge=0,le=10000000);applicantLabel:str=Field(default='Not supplied',max_length=200)
 class TextUpdate(BaseModel):
     text:str=Field(min_length=30,max_length=150000)
 
@@ -279,8 +279,12 @@ def import_job(p:JobImport):
     if p.workplace not in ('unknown','remote','hybrid','onsite'):raise ValueError('Unknown workplace')
     known={b['id'] for b in sources.BOARDS}|{'manual'}
     if p.source not in known:raise ValueError('Unknown source')
-    value=p.model_dump(exclude={'save_to_saved','notes','tailored_resume'});source=value.pop('source');j=sources.job(source,**value)
-    if j is None:raise ValueError('A valid HTTPS job URL is required')
+    value=p.model_dump(exclude={'save_to_saved','notes','tailored_resume'})
+    source=value.pop('source')
+    value['url']=p.url.strip()
+    value['title']=p.title.strip() or 'Untitled job'
+    j=sources.job(source,allow_missing_url=True,**value)
+    if j is None:raise ValueError('Enter a valid HTTPS job URL or leave it blank')
     if p.save_to_saved or p.tailored_resume:
         resume = build_resume_document(j,p.tailored_resume.text) if p.tailored_resume else None
         with db() as c:
@@ -293,9 +297,14 @@ def import_job(p:JobImport):
 def update_job(job_id:str,p:ImportedJob):
     current=get_job(job_id)
     if not current:raise HTTPException(404,'Job not found')
-    if not sources.url_ok(p.url):raise ValueError('A valid HTTPS job URL is required')
+    url=p.url.strip()
+    if url and not sources.url_ok(url):raise ValueError('Enter a valid HTTPS job URL or leave it blank')
     if p.workplace not in ('unknown','remote','hybrid','onsite'):raise ValueError('Unknown workplace')
-    updated={**current,**p.model_dump(),'id':job_id,'source':current['source'],'verified':True}
+    updated={**current,**p.model_dump(),'id':job_id,'source':current['source'],'verified':True,
+             'url':url,'title':p.title.strip() or 'Untitled job',
+             'company':p.company.strip() or 'Company not supplied'}
+    if not url:
+        updated.pop('applicationUrl',None)
     upsert_jobs(current['source'],[updated]);return {'ok':True}
 @app.put('/api/applications/{job_id}')
 def update_application(job_id:str,p:ApplicationUpdate):
@@ -399,6 +408,7 @@ async def load_details(job_id:str):
 async def apply_options(job_id:str):
     job = get_job(job_id)
     if not job: raise HTTPException(404, 'Job not found')
+    if not job.get('url'):raise ValueError('Add a job URL to check application options')
     return await application_options(job)
 
 
