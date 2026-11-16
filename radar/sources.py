@@ -36,9 +36,14 @@ def url_ok(url):
     try:return urlparse(str(url)).scheme=='https' and bool(urlparse(str(url)).hostname) and not urlparse(str(url)).username
     except ValueError:return False
 
-def job(source,title,company,location,url,description='',**extra):
-    if not title or not url_ok(url):return None
-    return {'id':source+':'+hashlib.sha256(url.encode()).hexdigest()[:24],'source':source,'title':clean(title),'company':clean(company) or 'Company not supplied','location':clean(location) or 'Location not supplied','url':url,'description':clean(description)[:30000],'salary':'','type':'','date':'','workplace':'unknown','applicants':None,'applicantLabel':'Not supplied','verified':True,**extra}
+def job(source,title,company,location,url,description='',*,allow_missing_url=False,**extra):
+    if not title or (not url_ok(url) and not (allow_missing_url and url == '')):return None
+    if url:
+        job_key = hashlib.sha256(url.encode()).hexdigest()[:24]
+    else:
+        from uuid import uuid4
+        job_key = uuid4().hex
+    return {'id':source+':'+job_key,'source':source,'title':clean(title),'company':clean(company) or 'Company not supplied','location':clean(location) or 'Location not supplied','url':url,'description':clean(description)[:30000],'salary':'','type':'','date':'','workplace':'unknown','applicants':None,'applicantLabel':'Not supplied','verified':True,**extra}
 
 def remote_type(location):
     return 'remote' if re.search(r'remote|worldwide|home.based',location,re.I) else 'hybrid' if re.search(r'hybrid',location,re.I) else 'onsite'
