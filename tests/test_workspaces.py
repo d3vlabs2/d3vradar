@@ -255,3 +255,19 @@ def test_private_workspaces_and_backup_archives_cannot_be_published():
         assert module.forbidden(name)
     assert not module.forbidden('.env.example')
     assert not module.forbidden('tests/test_workspaces.py')
+
+
+@pytest.mark.parametrize('email', [OWNER, FRIEND])
+def test_existing_workspace_receives_resume_tables(tenants, email):
+    client, headers, _ = tenants
+    assert client.get('/api/workspace', headers=headers(email)).status_code == 200
+    with store.workspace_context(email), store.db() as connection:
+        connection.execute('DROP TABLE tailored_resumes')
+        connection.execute('DROP TABLE application_resumes')
+        connection.execute('PRAGMA user_version=0')
+
+    response = client.get('/api/workspace', headers=headers(email))
+    assert response.status_code == 200
+    assert response.json()['resumeSelections'] == {}
+    if email == OWNER:
+        assert response.json()['documents'][0]['id'] == 'legacy-document'
