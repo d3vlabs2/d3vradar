@@ -17,6 +17,7 @@ CURRENT_WORKSPACE=ContextVar('radar_workspace',default=None)
 OWNER_EMAIL=None
 REGISTRY=DATA/'workspaces.sqlite'
 WORKSPACE_LOCK=RLock()
+WORKSPACE_SCHEMA_VERSION=1
 
 @contextmanager
 def registry():
@@ -78,8 +79,10 @@ def ensure_workspace(email):
         ident=current_workspace()
         with registry() as c:
             known=c.execute('SELECT 1 FROM users WHERE id=?',(ident,)).fetchone()
-        if not known or not workspace_path().exists():
+        new_workspace=not known or not workspace_path().exists()
+        if new_workspace or workspace_schema_outdated():
             init()
+        if new_workspace:
             existing_profile=get_setting('profile') is not None
             if get_setting('profile_reviewed') is None:put_setting('profile_reviewed',existing_profile)
             if get_setting('profile') is None:put_setting('profile',{**DEFAULT_PROFILE,'email':'' if email=='local' else email})
@@ -118,6 +121,11 @@ def db():
     finally:
         c.close()
 
+def workspace_schema_outdated():
+    with db() as c:
+        return c.execute('PRAGMA user_version').fetchone()[0] < WORKSPACE_SCHEMA_VERSION
+
+
 def init():
     with db() as c:
         c.executescript('''
@@ -136,6 +144,7 @@ CREATE TABLE IF NOT EXISTS queue(job_id TEXT PRIMARY KEY REFERENCES jobs(id),sta
     with db() as c:
         if 'fingerprint' not in {r['name'] for r in c.execute('PRAGMA table_info(source_runs)')}:
             c.execute("ALTER TABLE source_runs ADD COLUMN fingerprint TEXT NOT NULL DEFAULT ''")
+        c.execute(f'PRAGMA user_version={WORKSPACE_SCHEMA_VERSION}')
     os.chmod(workspace_path(),0o600)
 
 def get_setting(key,default=None):
