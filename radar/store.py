@@ -17,7 +17,7 @@ CURRENT_WORKSPACE=ContextVar('radar_workspace',default=None)
 OWNER_EMAIL=None
 REGISTRY=DATA/'workspaces.sqlite'
 WORKSPACE_LOCK=RLock()
-WORKSPACE_SCHEMA_VERSION=1
+WORKSPACE_SCHEMA_VERSION=2
 
 @contextmanager
 def registry():
@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS settings(id TEXT PRIMARY KEY,payload BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS documents(id TEXT PRIMARY KEY,kind TEXT NOT NULL,name TEXT NOT NULL,payload BLOB NOT NULL,created REAL NOT NULL,active INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY,source TEXT NOT NULL,payload TEXT NOT NULL,first_seen REAL NOT NULL,last_seen REAL NOT NULL,active INTEGER NOT NULL DEFAULT 1);
 CREATE INDEX IF NOT EXISTS jobs_source ON jobs(source);
+CREATE INDEX IF NOT EXISTS jobs_first_seen ON jobs(first_seen DESC);
 CREATE TABLE IF NOT EXISTS applications(job_id TEXT PRIMARY KEY REFERENCES jobs(id),status TEXT NOT NULL,notes BLOB NOT NULL,applied REAL,followup REAL,updated REAL NOT NULL);
 CREATE TABLE IF NOT EXISTS tailored_resumes(document_id TEXT PRIMARY KEY REFERENCES documents(id),job_id TEXT NOT NULL REFERENCES jobs(id));
 CREATE TABLE IF NOT EXISTS application_resumes(job_id TEXT PRIMARY KEY REFERENCES jobs(id),document_id TEXT NOT NULL REFERENCES documents(id));
